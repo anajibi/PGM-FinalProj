@@ -222,18 +222,30 @@
     Such difference in flow values makes it difficult to parametrize $F$. Authors used proposed alternative by Bengio
     et al. in~\cite{bengio2023gflownetfoundations} to address this issue. This approach suggests parametrization of
     forward and backward transition probabilities $P_{\phi}(s_{i+1} \mid s_i)$ and $P_{\psi}(s_i \mid s_{i+1})$ such
-    that the flow-matching condition is satisfied through
+    that the flow-matching condition is satisfied through eq.~\eqref{eq:detailed_balance}.
+
+    This equation --- proof could be seen in Appendix~\ref{app:detailed_balance} --- holds in the case that all states of the GFlowNet are
+    complete (except the terminal state $s_f$). Moreover, $P_{\phi}(s_{i+1} \mid s_i)$ is an encoding of the forward
+    flow --- a distribution over the child states of $s_i$ --- and $P_{\psi}$ is an encoding of the backward flow --- a
+    distribution over the parent states of $s_{i+1}$. Eq.~\eqref{eq:detailed_balance} ensures that the flow-matching
+    condition holds for any transition $s_i \to s_{i+1}$.
+
+    \begin{equation}
+        R(s_i) P_{\phi}(s_{i+1} \mid s_i)P_{\phi}(s_f \mid s_{i+1}) = R(s_{i+1}) P_{\psi}(s_i \mid s_{i+1})P_{\phi}(
+        s_f \mid s_i)
+        \label{eq:detailed_balance}
+    \end{equation}
 
 
 
-    \bibliographystyle{ieee_fullname}
-    \bibliography{references}
+        \bibliographystyle{ieee_fullname}
+        \bibliography{references}
 
-    \makeappendix
+        \makeappendix
 
-    \appendix
+        \appendix
 
 %\begin{thebibliography}{99}
 %\end{thebibliography}
 
-\end{document}
+    \end{document}
