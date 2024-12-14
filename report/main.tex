@@ -163,7 +163,7 @@
     try to relax the acyclicity constraint into a soft prior $P(G)$ considering continuous acyclicity.
 
 
-    \section{Background}
+    \section{Background}\label{sec:background}
     \vspace*{-3mm}
 
     The problem of learning the structure of a DAG from data could be formulated as learning the transition probabilities
@@ -231,21 +231,109 @@
     condition holds for any transition $s_i \to s_{i+1}$.
 
     \begin{equation}
-        R(s_i) P_{\phi}(s_{i+1} \mid s_i)P_{\phi}(s_f \mid s_{i+1}) = R(s_{i+1}) P_{\psi}(s_i \mid s_{i+1})P_{\phi}(
-        s_f \mid s_i)
+        \begin{aligned}
+            R(s_i) P_{\phi}(s_{i+1} \mid s_i)P_{\phi}(s_f \mid s_{i+1})=\\
+            R(s_{i+1}) P_{\psi}(s_i \mid s_{i+1})P_{\phi}(s_f \mid s_i)
+        \end{aligned}
         \label{eq:detailed_balance}
     \end{equation}
 
 
+    \section{Proposed Approach}\label{sec:proposed_approach}
 
-        \bibliographystyle{ieee_fullname}
-        \bibliography{references}
+    \subsection{GFlowNet for DAG Structure Learning}
 
-        \makeappendix
+    The proposed approach in~\cite{deleu2022daggflownet} leverages Generative Flow Networks (GFlowNets) to model the
+    posterior distribution $P(G|D)$ of a DAG given data $D$. The goal is to learn the transition probabilities of a
+    Markov Chain where each state represents a valid DAG$G$.
 
-        \appendix
+    To further elaborate this notion, first, let's take a look at Fig.~\ref{fig:dag_gflownet}. This figure shows the
+    overall generation process of a DAG using GFlowNet. The process starts from an initial state $G_0$ and moves
+    forward, according to the transition probabilities, $P_{\phi}(G_{i+1} \mid G_i)$ until it reaches the absorbing state
+    $s_f$. Note that since in eq.~\eqref{eq:detailed_balance} we assumed that all states are complete except the
+    absorbing state, all states of the inner DAG of GFlowNet should be valid DAGs (except the absorbing state).
+    At each step, moving from $G_i$ to $G_{i+1}$, we add an edge to the DAG considering the acyclicity constraint.
+    The aciclicity constraint is enforced using some masking operation on the adjacency matrix of the DAG which is
+    explained in details in Appendix~\ref{app:masking}.
+
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=0.5\textwidth]{figures/dag_gflownet}
+        \caption{DAG-GFlowNet: Generative Flow Network for DAG Structure Learning for 3 nodes. Figure taken from~\cite{deleu2022daggflownet}.}
+        \label{fig:dag_gflownet}
+    \end{figure}
+
+    To parameterize the forward transition probabilities $P_{\phi}(G_{i+1} \mid G_i)$, the authors have distinguished
+    between two types of transition, terminating transition $P_{\phi}(s_f \mid G_i)$ and non-terminating transition
+    $P_{\phi}(G_{i+1} \mid G_i)$.
+    More accurately, the non-terminating transition should be written as:
+    \begin{equation}
+        P_{\phi}(G_{i+1} \mid G_i) = (1-P_{\phi}(s_f \mid G_i)) P_{\phi}(G_{i+1} \mid G_i, \neg s_f)
+        \label{eq:non_terminating_transition}
+    \end{equation}
+    where $P_{\phi}(G_{i+1} \mid G_i, \neg s_f)$ is the transition probability from $G_i$ to $G_{i+1}$ knowing we do not
+    terminate.
+
+    Simply put, $G_{i+1}$ is the result of adding an edge to $G_i$, thus, $P_{\phi}(G_{i+1} \mid G_i, \neg s_f)$ can
+    be modeled
+    as a probability distribution over all the possible moves $d^2$ --- where $d$ is the number of nodes in the graph ---
+    that can be made to $G_i$ to get $G_{i+1}$. However, to account for the acyclicity constraint, the authors have
+    proposed filtering out actions not leading to valid DAGs and setting their probabilities to zero. Then, normalizing
+    the remaining probabilities to sum to one.
+
+    \subsection{Neural Network Architecture}\label{sec:nn_architecture}
+    \vspace*{-3mm}
+
+    Eq.~\eqref{eq:non_terminating_transition} suggests that the transition probabilities could be modeled using the
+    same backbone with $\phi$ as the parameters and different heads in the output layer. The authors used a neural
+    network to satisfy: (1) invariant to the order of the input, since each state is represented as a set of edges,
+    (2) transform a set of input edges into a set of output probabilities for each edge to be added, and (3) bounded
+    parameters despite the unbounded nature of the input, specifically $d$ --- the number of nodes in the graph.
+
+    One choice to satisfy these requirements would be to use transformers~\cite{vaswani2017attention}, however,
+    because of the size of the input, $d^2$, the self-attention layers would scale up to $O(d^4)$, which makes it
+    interactable for large graphs. Instead, authors used a Linear Transformer~\cite{katharopoulos2020transformers}.
+    Detailed explanation of linear attention mechanism could be found in Appendix~\ref{app:linear_attention}.
+
+    This concludes us to the architecture of the neural network used in the proposed approach. Fig.~\ref{fig:nn_architecture}
+    shows the overall architecture of the neural network used in the proposed approach.
+
+    \begin{figure}
+        \centering
+        \includegraphics{figures/nn_architecture}
+        \caption{Neural Network Architecture used in the proposed approach. Figure taken from~\cite{deleu2022daggflownet}.
+        The input Graph $G$ is embedded into an embedding of $d^2$ edges where each edge is itself embedded using
+        embedding of its outgoing and incoming nodes along with an indicator of its presence in the graph. A linear Transformer
+        with $L$ layers is used and the output is passed through two different heads to copmute the terminating and non-terminating
+        forward transition probabilities. Note that for $P_{\phi}(G_{i+1} \mid G_i, \neg s_f)$, the output is passed through a
+        masking later filtering out invalid actions before using a softmax layer to normalize the probabilities.}
+        \label{fig:nn_architecture}
+    \end{figure}
+
+    \textbf{The loss function} Now that we have defined the overall architecture of the neural network and the
+    transition probabilities, we need to define the loss function to train the network.
+    To satisfy eq.~\eqref{eq:detailed_balance}, authors suggested using the following loss function:
+    \begin{equation}
+        \mathcal{L}(\phi) = \sum_{G_i \to G_{i+1}} \left \log
+        \frac{R(G_{i+1})P_{\psi}(G_i \mid G_{i+1})P_{\phi}(s_f \mid G_i)}{R(G_i)P_{\phi}(G_{i+1} \mid G_i)P_{\phi}(s_f \mid G_{i+1})} \right^2 .
+        \label{eq:loss_function}
+    \end{equation}
+
+    Note that this loss function is only a function of $\phi$ and not $\psi$. This is because the backward transition
+    is considered to be fixed and not learned.
+
+
+
+
+    \bibliographystyle{ieee_fullname}
+    \bibliography{references}
+
+    \makeappendix
+
+    \appendix
 
 %\begin{thebibliography}{99}
 %\end{thebibliography}
 
-    \end{document}
+\end{document}
