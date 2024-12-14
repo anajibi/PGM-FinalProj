@@ -299,9 +299,9 @@
     This concludes us to the architecture of the neural network used in the proposed approach. Fig.~\ref{fig:nn_architecture}
     shows the overall architecture of the neural network used in the proposed approach.
 
-    \begin{figure}
+    \begin{figure*}
         \centering
-        \includegraphics{figures/nn_architecture}
+        \includegraphics[width=0.92\textwidth]{figures/nn_architecture}
         \caption{Neural Network Architecture used in the proposed approach. Figure taken from~\cite{deleu2022daggflownet}.
         The input Graph $G$ is embedded into an embedding of $d^2$ edges where each edge is itself embedded using
         embedding of its outgoing and incoming nodes along with an indicator of its presence in the graph. A linear Transformer
@@ -309,23 +309,217 @@
         forward transition probabilities. Note that for $P_{\phi}(G_{i+1} \mid G_i, \neg s_f)$, the output is passed through a
         masking later filtering out invalid actions before using a softmax layer to normalize the probabilities.}
         \label{fig:nn_architecture}
-    \end{figure}
+    \end{figure*}
+
+    \vspace*{3mm}
 
     \textbf{The loss function} Now that we have defined the overall architecture of the neural network and the
     transition probabilities, we need to define the loss function to train the network.
     To satisfy eq.~\eqref{eq:detailed_balance}, authors suggested using the following loss function:
     \begin{equation}
-        \mathcal{L}(\phi) = \sum_{G_i \to G_{i+1}} \left \log
-        \frac{R(G_{i+1})P_{\psi}(G_i \mid G_{i+1})P_{\phi}(s_f \mid G_i)}{R(G_i)P_{\phi}(G_{i+1} \mid G_i)P_{\phi}(s_f \mid G_{i+1})} \right^2 .
+        \begin{array}{l}
+            \mathcal{L}(\phi) = \\
+            \sum_{G_i \to G_{i+1}} \left[ \log
+            \frac{R(G_{i+1})P_{\psi}(G_i \mid G_{i+1})P_{\phi}(s_f \mid G_i)}{R(G_i)P_{\phi}(G_{i+1} \mid G_i)P_{\phi}(s_f \mid G_{i+1})} \right]^2 .
+        \end{array}
         \label{eq:loss_function}
     \end{equation}
 
-    Note that this loss function is only a function of $\phi$ and not $\psi$. This is because the backward transition
-    is considered to be fixed and not learned.
+    Note that this loss function is defined as a function of $\phi$ and not $\psi$. This is because the backward
+    transition is considered to be fixed and not learned.
+
+    \subsection{Bayesian Structure Learning using GFlowNet}
+
+    Suppose we are given a dataset $\mathcal{D} = \{x^{(1)}, x^{(2)}, \ldots, x^{(N)}\}$ where each $x^{(i)}$ is an i.i.d
+    fully observed sample from the target distribution. The goal is to obtain a posterior distribution
+    $P(G|\mathcal{D})$.
+    As mentioned before, GFlowNet models a distribution $P(s) \propto R(s)$, now if we define the reward function $R(s)$
+    according to eq.~\eqref{eq:reward_function}, we can model the posterior distribution $P(G|\mathcal{D})$ using GFlowNet.
+    \begin{equation}
+        R(s) = P(G|D) = P(G)P(D|G) = P(G) P(\theta|G) P(D|\theta, G)
+        \label{eq:reward_function}
+    \end{equation}
+    where $P(G)$ is the prior distribution of the DAG and $P(D|G)$ is the likelihood of the data given the DAG.
+
+    The authors tried to make the reward function modular and thus, computationally efficient. They assumed that both the
+    prior $P(G)$ and the prior over the parameters $P(\theta|G)$ are modular, thus, choosing a modular likelihood
+    function can result in a modular reward function. BGe score~\cite{scutari2009bayesiannetworks} and
+    BDe score~\cite{heckerman1995learningbayesiannetworks} are two examples of modular likelihood functions that
+    were used by the authors in their experiments.
+
+    Considering modularity we have:
+    \begin{equation}
+        \log R(G) = \sum_{j=1}^{d} LocalScore(X_j, \text{Pa}_G(X_j)).
+        \label{eq:modular_reward}
+    \end{equation}
+
+    This will yield eq.~\eqref{eq:log_diff} for adding edge $X_i \to X_j$ to the graph $G$ resulting in graph $G'$.
+
+    \begin{equation}
+        \begin{aligned}
+            \log \frac{R(G')}{R(G)} &= \log R(G') - \log R(G) =\\
+            & = \text{LocalScore}(X_j \mid \text{Pa}_{G}(X_j)\cup \{X_i\}) \\
+            &-\text{LocalScore}(X_j \mid \text{Pa}_{G}(X_j)).
+        \end{aligned}
+        \label{eq:log_diff}
+    \end{equation}
+
+    This difference in local scores is called the \textit{delta score} in the paper. The authors used the delta score.
+
+    \subsection{Learning a large DAG space}
+    \vspace*{-3mm}
+
+    As the DAG space is combinatorial, in the learning process, we cannot account for all possible graphs in the
+    space. To address this challenge, the authors took advantage of an \textbf{RL} approach called \textbf{
+        Off-Policy Learning}
+
+    The idea is to buffer transitions from the generative process and use them to train the neural network in future
+    steps. Suppose for any transition $G \to G'$, we buffer the transition in some buffer $\mathcal{B}$.
+    Then, we can use the transitions in $\mathcal{B}$ with respect to some distribution $\pi$ to minimize:
+    \begin{equation}
+        \mathcal{L}(\phi) = \mathbb{E}_{\pi} \left[ \left[ \log
+        \frac{R(G')P_{\psi}(G \mid G')P_{\phi}(s_f \mid G)}{R(G)P_{\phi}(G' \mid G)P_{\phi}(s_f \mid G')} \right]^2 \right].
+        \label{eq:off_policy_loss}
+
+    \end{equation}
+
+    Inspired by reinforcement learning again, the distribution $\pi$ could be learned on-policy as
+    $P_{\phi}(G' \mid G)$ and used off-policy during the learning process. This is kind of similar to the \textit{
+        Expectation Maximization}~\cite{dempster1977maximumlikelihood} algorithm where the E-step is done on-policy and
+    the M-step is done off-policy.
+    All that said, the authors used a variant of the \textbf{Q-learning} algorithm to learn the distribution $\pi$.
+    The Q-learning algorithm is used to learn the optimal policy $\pi$ that maximizes the expected reward.
+
+    To end this section, we can summarize the proposed approach in Algorithm~\ref{alg:proposed_approach}.
+    \begin{algorithm}
+        \caption{Proposed Approach for Learning the Structure of a DAG using GFlowNet}
+        \label{alg:proposed_approach}
+        \begin{algorithmic}[1]
+            \State Initialize the neural network parameters $\phi$.
+            \State Initialize the buffer $\mathcal{B}$.
+            \State Fill the buffer $\mathcal{B}$ with some initial transitions along with their delta scores.
+            \While{not converged}
+                \State Sample a batch of transitions from $\mathcal{B}$.
+                \State Compute the loss function $\mathcal{L}(\phi)$ using eq.~\eqref{eq:log_diff} and eq.~\eqref{eq:off_policy_loss}.
+                \State Update the neural network parameters $\phi$ using the gradients of $\mathcal{L}(\phi)$.
+            \EndWhile
+        \end{algorithmic}
+    \end{algorithm}
+
+
+    \section{Experiments}\label{sec:experiments}
+    \vspace*{-3mm}
+
+    In this section, we will discuss the experiments conducted in this project to evaluate the performance of the proposed
+    approach in~\cite{deleu2022daggflownet}. We will describe the datasets used, the evaluation metrics used. We will
+    also describe the hyperparameters used in the experiments.
+
+    \subsection{Datasets}
+    \vspace*{-3mm}
+
+    In this project, we used synthetic datasets to evaluate the performance of the proposed approach. We generated
+    different graphs with different complexities and sizes. Furthermore, the experiments were conducted on these
+    graphs with different sizes of generated data. The information for the datasets used in the experiments is shown in
+    Table~\ref{tab:datasets}.
+
+    \begin{table}[h]
+        \centering
+        \begin{tabular}{|l|c|c|c|}
+            \hline
+            \textbf{Dataset} & \textbf{Nodes} & \textbf{Edges} & \textbf{Data Size} \\
+            \hline
+            Dataset 1.1      & 5              & 8              & 30                 \\
+            Dataset 1.2      & ---            & ---            & 50                 \\
+            \hline
+            Dataset 2.1.1    & 10             & 15             & 150                \\
+            Dataset 2.1.2    & ---            & ---            & 250                \\
+            Dataset 2.1.3    & ---            & ---            & 80                 \\
+            \hline
+            Dataset 2.2.1    & ---            & 30             & 100                \\
+            Dataset 2.2.2    & ---            & ---            & 200                \\
+            \hline
+            Dataset 3.1      & 15             & 45             & 150                \\
+            Dataset 3.2      & ---            & ---            & 250                \\
+            Dataset 3.3      & ---            & ---            & 500                \\
+
+            \hline
+        \end{tabular}
+        \caption{Datasets used in the experiments. The '---' indicates that the information is the same as the previous
+        row.}
+        \label{tab:datasets}
+    \end{table}
+
+    The rationale behind selecting these configurations for the datasets is to evaluate the performance of the proposed
+    approach on graphs with different complexities and sizes. Moreover, the effect of the observation size (data
+    size) is also evaluated in the experiments. To summarize:
+    \begin{itemize}
+        \item In Dataset 1, we evaluate the performance of \textbf{DAG-GFlowNet} on a small graph with fixed number
+        of edges but varying data size. This will give us a better understanding of the robustness of the proposed
+        approach in terms of data dependency.
+        \item Dataset 2 could be break down into two parts:
+        \begin{itemize}
+            \item In Dataset 2.1, we evaluate the effect of the data size on a medium sized graph with low complexity (low number of edges).
+            \item Dataset 2.2 considers the effect of data size on a more complex graph with the same number of
+            nodes as Dataset 2.1 but with a higher number of edges.
+        \end{itemize}
+        \item Lastly, we evaluate the performance of the proposed approach on a large graph with varying data size in
+        Dataset 3.
+    \end{itemize}
+
+    Data generation process and graph generation process for these datasets is explained in details in Appendix~\ref{app:data_generation}.
+
+    \subsection{Evaluation Metrics}
+    \vspace*{-3mm}
+
+    We evaluated the acquired posterior probability distribution $P(G|D)$ using various evaluation metrics. In this
+    section, we give a brief overview of the evaluation metrics used in the experiments and how they are calculated.
+    \vspace*{3mm}
+    \textbf{Structural Hamming Distance (SHD)} is a metric that measures the number of incorrect edges in the
+    predicted graph. It is calculated as the sum of the number of false positives and false negatives. We will
+    evaluate the learned distribution using SHD. Generating multiple samples from the learned distribution,
+    we will calculate expected E-SHD (Expected Structural Hamming Distance) and compare these numbers over different
+    datasets to evaluate the performance of the proposed approach.
+
+    \vspace*{3mm}
+    \textbf{Ancestor Relationship} is another metric that measures the percentage of edges that are correctly
+    predicted to be in the same direction as the ground truth DAG. This metric is calculated as the ratio of the
+    number of correct edges to the total number of edges in the graph.
+
+    \vspace*{3mm}
+    \textbf{BGe Score} is a metric that measures the likelihood of the data given the learned DAG. To have a
+    quantitative measure of how close the learned DAG is to the ground truth DAG, we will calculate the BGe score
+    for a number of sampled DAGs from the learned distribution and compare the BGe score of the ground truth DAG with
+    the learned DAGs.
+
+    \vspace*{3mm}
+    \textbf{$P(D' \mid D)$} To quantify the quality of the learned distribution in sampling consistent DAGs with the
+    original distribution, we will evaluate the likelihood of a held-out dataset $D'$ given observations. This
+    probability could be quantified as:
+    \begin{equation}
+        P(D' \mid D) = \int P(D' \mid G, D) P(G \mid D). dG
+        \label{eq:likelihood}
+    \end{equation}
+    However, since integrating over all possible DAGs is intractable, we will approximate this integral using
+    sampling and thus, calculating the expected likelihood of the held-out dataset given the observations.
+    \begin{equation}
+        P(D' \mid D) \approx \frac{1}{N} \sum_{i=1}^{N} P(D' \mid G_i, D)
+        \label{eq:approx_likelihood}
+    \end{equation}
+    where $G_i$ is a sampled DAG from the learned distribution.
 
 
 
 
+
+
+
+
+
+
+
+
+
+    \pagebreak
     \bibliographystyle{ieee_fullname}
     \bibliography{references}
 
