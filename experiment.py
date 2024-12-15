@@ -16,13 +16,13 @@ configs = {
 def perform_experiment(num_variables, num_edges, data_size):
     print(f"Performing experiment with {num_variables} variables and {num_edges} edges, data size: {data_size}")
     args = {
-        'num_iterations': 100,
-        'prefill': 10,
-        'num_variables': num_variables,
-        'num_edges': num_edges,
-        'num_samples': data_size,
+        'num_iterations': '100',
+        'prefill': '10',
+        'num_variables': f'{num_variables}',
+        'num_edges': f'{num_edges}',
+        'num_samples': f'{data_size}',
 
-        'output_folder': Path('/kaggle/working/output') / f'{num_variables}_{num_edges}_{data_size}',
+        'output_folder': '/kaggle/working/output' + f'{num_variables}_{num_edges}_{data_size}',
     }
     args = parse_args(args)
 
