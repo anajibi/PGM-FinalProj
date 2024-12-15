@@ -18,6 +18,7 @@ def perform_experiment(num_variables, num_edges, data_size):
     args = {
         'num_iterations': 100,
         'prefill': 10,
+        'graph':'erdos_renyi_lingauss',
         'num_variables': num_variables,
         'num_edges': num_edges,
         'num_samples': data_size,
