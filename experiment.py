@@ -21,7 +21,7 @@ def perform_experiment(num_variables, num_edges, data_size):
         '--num_edges': num_edges,
         '--num_samples': data_size,
 
-        '--output_folder': Path('output') / f'{num_variables}_{num_edges}_{data_size}',
+        '--output_folder': Path('/kaggle/working/output') / f'{num_variables}_{num_edges}_{data_size}',
     }
     args = parse_args(args)
 
