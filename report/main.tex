@@ -302,12 +302,12 @@
     \begin{figure*}
         \centering
         \includegraphics[width=0.92\textwidth]{figures/nn_architecture}
-        \caption{Neural Network Architecture used in the proposed approach. Figure taken from~\cite{deleu2022daggflownet}.
+        \caption{Neural Network Architecture used in the proposed approach.
         The input Graph $G$ is embedded into an embedding of $d^2$ edges where each edge is itself embedded using
         embedding of its outgoing and incoming nodes along with an indicator of its presence in the graph. A linear Transformer
         with $L$ layers is used and the output is passed through two different heads to copmute the terminating and non-terminating
         forward transition probabilities. Note that for $P_{\phi}(G_{i+1} \mid G_i, \neg s_f)$, the output is passed through a
-        masking later filtering out invalid actions before using a softmax layer to normalize the probabilities.}
+        masking later filtering out invalid actions before using a softmax layer to normalize the probabilities. Figure taken from~\cite{deleu2022daggflownet}.}
         \label{fig:nn_architecture}
     \end{figure*}
 
@@ -426,21 +426,21 @@
         \centering
         \begin{tabular}{|l|c|c|c|}
             \hline
-            \textbf{Dataset} & \textbf{Nodes} & \textbf{Edges} & \textbf{Data Size} \\
+            \textbf{Dataset} & \textbf{Nodes} & \textbf{Average # Edges} & \textbf{Data Size} \\
             \hline
-            Dataset 1.1      & 5              & 8              & 30                 \\
-            Dataset 1.2      & ---            & ---            & 50                 \\
+            Dataset 1.1      & 5              & 10                        & 30                 \\
+            Dataset 1.2      & ---            & ---                      & 50                 \\
             \hline
-            Dataset 2.1.1    & 10             & 15             & 150                \\
-            Dataset 2.1.2    & ---            & ---            & 250                \\
-            Dataset 2.1.3    & ---            & ---            & 80                 \\
+            Dataset 2.1.1    & 10             & 20                       & 150                \\
+            Dataset 2.1.2    & ---            & ---                      & 250                \\
+            Dataset 2.1.3    & ---            & ---                      & 80                 \\
             \hline
-            Dataset 2.2.1    & ---            & 30             & 100                \\
-            Dataset 2.2.2    & ---            & ---            & 200                \\
+            Dataset 2.2.1    & ---            & 30                       & 100                \\
+            Dataset 2.2.2    & ---            & ---                      & 200                \\
             \hline
-            Dataset 3.1      & 15             & 45             & 150                \\
-            Dataset 3.2      & ---            & ---            & 250                \\
-            Dataset 3.3      & ---            & ---            & 500                \\
+            Dataset 3.1      & 15             & 45                       & 150                \\
+            Dataset 3.2      & ---            & ---                      & 250                \\
+            Dataset 3.3      & ---            & ---                      & 500                \\
 
             \hline
         \end{tabular}
@@ -507,6 +507,9 @@
     \end{equation}
     where $G_i$ is a sampled DAG from the learned distribution.
 
+    \subsection{Experimental Setup}\label{sec:experimental_setup}
+    \vspace*{-3mm}
+
 
 
 
@@ -527,7 +530,121 @@
 
     \appendix
 
+    \counterwithin*{equation}{section}
+    \renewcommand\theequation{\thesection\arabic{equation}}
+
+
+    \section{Detailed Balance Condition}\label{app:detailed_balance}
+    \vspace*{-3mm}
+
+    In this section, as with the original paper (equations were taken from the original paper), we will prove the detailed balance condition
+    for the proposed approach.
+
+    Suppose all states are complete states excpet the terminal state $s_f$. Denote $P_F$ and $P_B$ as the forward
+    and backward transition probabilities, respectively --- this is for simplifying the notation. The detailed balance
+    condition according to~\cite{bengio2023gflownetfoundations} (Def. 17) is given by:
+    \begin{equation}
+        F(s_t)P_F(s_{t+1} \mid s_t) = F(s_{t+1})P_B(s_t \mid s_{t+1})
+        \label{eq:detailed_balance_app}
+    \end{equation}
+    In the case where all the states are complete, we also know that (\cite{bengio2023gflownetfoundations} Def. 16):
+    \[
+        P_F(s_f \mid s_t) \coloneq \frac{F(s_t \to s_f)}{\sum_{s \in \text{Ch}(s_t)} F(s_t \to s)} = \frac{R(s_t)}{F(s_t)}
+        \LeftRightArrow F(s_t) = \frac{R(s_t)}{P_F(s_f \mid s_t)},
+    \]
+    where $F(s \to s')$ represents the flow from state $s$ to  $s'$. Replacing $F(.)$ in eq.~\eqref{eq:detailed_balance_app}
+    yields:
+    \begin{equation}
+        R(s_t)P_F(s_{t+1} \mid s_t)P_F(s_f \mid s_{t+1}) = R(s_{t+1})P_B(s_t \mid s_{t+1})P_F(s_f \mid s_t).
+        \label{eq:detailed_balance_app2}
+    \end{equation}
+    This concludes the proof of the detailed balance condition.
+
+
+    \section{Masking Operation}\label{app:masking}
+    \vspace*{-3mm}
+
+    In this section we will explain the masking operation used in~\cite{deleu2022daggflownet} to enforce the acyclicity
+    constraint. Authors suggested an online update of the mask matrix to avoid unnecessary computation of this mask
+    from scratch for each graph.
+
+    Firstly, we should introduce \textit{Transitive Closure} and $G^T$ which is the transpose of the graph $G$.
+    Transpose of a directed graph $G$ is another directed graph on the same set of vertices with all of the edges
+    reversed. Denote this graph as $G^T$. Furthermore, the transitive closure of a directed graph $G$ is a graph
+    such that there is an edge from $i$ to $j$ in $T$ if and only if there is a directed path from $i$ to $j$ in
+    $G$. If we denote the adjacency matrix of $G$ as $A$, and Adjacency matrix of Transitive closure of $G^T$ as $T$,
+    then the mask matrix $m$ is defined as:
+    \[
+        m = A + T,
+    \]
+    where $+$ is the element-wise addition.
+    Each element of this matrix, if 0, indicates that an edge between the corresponding nodes is allowed, and if 1,
+    indicates that an edge between the corresponding nodes is not allowed. The intuition behind this operation is
+    that if an edge is in the original matrix, it cannot be added again (adjacency matrix part) and if there is a
+    directed path in the original matrix from $i$ to $j$ --- implying that there is an edge from $j$ to $i$ in the
+    transitive closure of the transposed graph --- we cannot add an edge from $j$ to $i$ (transitive closure part).
+    Note that the diagonal elements of the adjacency matrix which are corresponding to self-loops are set to 1 in $T$
+    by convention.
+
+    Suppose we have a graph $G_t$ and its respective mask $m_t$. This mask is made of two parts, Adjacency matrix of
+    the graph $A_t$ and transitive closure of $G_t^T$ denoted as $T_{t}$. For adding an edge $i$ to $j$ to the
+    graph (supposed this edge is allowed), the new adjacency matrix could be calculated easily. Now for $T_{t+1}$:
+    Take the column corresponding to index of $j$ in $T_t$ and the row corresponding to index of $i$ in $T_t$ and
+    perform outer product operation on $C_j$ and $R_i$ to get a new matrix $\hat{T}_{t+1}$. $T_{t+1}$ is then
+    calculated as $T_t + \hat{T}_{t+1}$.
+
+    The intuition behind this is: $C_j$ is the nodes that have a directed path to $j$ and $R_i$ is the nodes that
+    $i$ has a directed path to. The outer product operation will result in a matrix where the element $[a, b]$ is
+    non-zero if there is a directed path from $b$ to $a$ in the original matrix and thus, we cannot add an edge from
+    $a$ to $b$. Fig.~\ref{fig:masking} shows the masking operation for a simple graph and you can follow these
+    explanation on this figure to better understand the operation.
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=0.92\textwidth]{figures/masking}
+        \caption{Masking operation for a simple graph. Figure is taken from the original paper~\cite{deleu2022daggflownet}.}
+        \label{fig:masking}
+    \end{figure}
+
+
+    \section{Linear Attention Mechanism}\label{app:linear_attention}
+    \vspace*{-3mm}
+
+    In this section, we will explain the linear attention mechanism used in the proposed approach. The linear attention
+    mechanism is a variant of the self-attention mechanism used in transformers. The self-attention mechanism is
+    computationally expensive as it scales quadratically with the input size. The linear attention mechanism on the
+    other hand, relies on the following equations:
+    \begin{equation}
+        Q = XW_Q, \quad K = XW_K, \quad V = XW_V, LinAttn_k(X) = \frac{\sum_{j=1}^{d^2}
+            \left(\phi(Q_k)^T\phi(K_j)\right)V_j}{\sum_{j=1}^{d^2} \phi(Q_k)^T\phi(K_j)},
+        \label{eq:linear_attention}
+    \end{equation}
+
+    where $Q$, $K$, and $V$ are the query, key, and value matrices, respectively. $W_Q$, $W_K$, and $W_V$ are the
+    weight matrices for the query, key, and value, respectively. $\phi$ is a non-linear feature map, and $d$ is the
+    number of nodes in the graph.
+
+    To better understand the linear characteristic of time complexity, suppose for on edge addition, we want to
+    perform the calculation. The time complexity is constant with respect to the size of the embedding space. Thus,
+    for $d^2$ edges, the time complexity is $O(d^2)$.
+
+
+    \section{Data Generation Process}\label{app:data_generation}
+    \vspace*{-3mm}
+
+    The data Generation Process is mostly based on the original paper which itself is based on the work of~\cite{erdos1960evolutionrandomgraphs}.
+    The process is as follows:
+
+    ### Write the code in algorithm from graph.py
+
+    \begin{enumerate}
+        \item Sample a DAG based on prior probability $P(G)$ that is based on the model present by~\cite{erdos1960evolutionrandomgraphs}.
+        This model, as explained in section~\ref{sec:proposed_approach}, is a modular prior function which considers
+        the probability of existence of an edge between two nodes independently. The prior is defined as:
+        \
+
+
 %\begin{thebibliography}{99}
 %\end{thebibliography}
 
-\end{document}
+    \end{document}
