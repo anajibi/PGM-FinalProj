@@ -4,6 +4,7 @@ import optax
 import networkx as nx
 import pickle
 import jax
+import json
 
 from tqdm import trange
 from numpy.random import default_rng
