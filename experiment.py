@@ -1,25 +1,17 @@
 import json
 from argparse import ArgumentParser
 from pathlib import Path
-
 from train import main
 
-configs = {
-    "num_variables": {
-        5: {'num_edges': 8, 'data_size': [30, 50]},
-        10: {'num_edges': [15, 30], 'data_size': [[80, 150, 250], [100, 200]]},
-        15: {'num_edges': 45, 'data_size': [150, 250, 500]}
-    }
-}
 
-
-def perform_experiment(num_variables, num_edges, data_size):
-    print(f"Performing experiment with {num_variables} variables and {num_edges} edges, data size: {data_size}")
+def perform_experiment(num_variables, num_edges, data_size, seed):
+    print(f"Performing experiment with {num_variables} variables and {num_edges} edges, data size: {data_size}, seed: {seed}")
     args = {
         '--num_iterations': 100,
         '--prefill': 10,
-        '--output_folder': Path('/kaggle/working/output') / f'{num_variables}_{num_edges}_{data_size}',
-        'erdos_renyi_lingauss':True,
+        '--output_folder': Path('/kaggle/working/output') / f'{num_variables}_{num_edges}_{data_size}_{seed}',
+        '--seed': seed,
+        'erdos_renyi_lingauss': True,
         '--num_variables': num_variables,
         '--num_edges': num_edges,
         '--num_samples': data_size,
