@@ -6,7 +6,7 @@ import pickle
 import jax
 import json
 
-from tqdm import trange
+from tqdm.autonotebook import trange
 from numpy.random import default_rng
 
 from dag_gflownet.env import GFlowNetDAGEnv
