@@ -4,11 +4,13 @@ from pathlib import Path
 from train import main
 
 
-def perform_experiment(num_variables, num_edges, data_size, seed):
-    print(f"Performing experiment with {num_variables} variables and {num_edges} edges, data size: {data_size}, seed: {seed}")
+
+def perform_experiment(num_variables, num_edges, data_size, seed, num_iterations):
+    print(
+        f"Performing experiment with {num_variables} variables and {num_edges} edges, data size: {data_size}, seed: {seed}")
     args = {
-        '--num_iterations': 100,
-        '--prefill': 10,
+        '--num_iterations': num_iterations,
+        '--prefill': num_iterations / 100,
         '--output_folder': Path('/kaggle/working/output') / f'{num_variables}_{num_edges}_{data_size}_{seed}',
         '--seed': seed,
         'erdos_renyi_lingauss': True,
