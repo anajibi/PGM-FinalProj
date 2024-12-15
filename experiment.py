@@ -16,15 +16,16 @@ configs = {
 def perform_experiment(num_variables, num_edges, data_size):
     print(f"Performing experiment with {num_variables} variables and {num_edges} edges, data size: {data_size}")
     args = {
-        'num_iterations': 100,
-        'prefill': 10,
-        'graph':'erdos_renyi_lingauss',
-        'num_variables': num_variables,
-        'num_edges': num_edges,
-        'num_samples': data_size,
+        '--num_iterations': 100,
+        '--prefill': 10,
+        '--output_folder': Path('/kaggle/working/output') / f'{num_variables}_{num_edges}_{data_size}',
+        'erdos_renyi_lingauss':True,
+        '--num_variables': num_variables,
+        '--num_edges': num_edges,
+        '--num_samples': data_size,
 
-        'output_folder': Path('/kaggle/working/output') / f'{num_variables}_{num_edges}_{data_size}',
     }
+
     args = parse_args(args)
 
     main(args)
@@ -120,9 +121,9 @@ def parse_args(args_dict=None):
         args_list = []
         for key, value in args_dict.items():
             if isinstance(value, bool):
-                args_list.append(f"--{key}")
+                args_list.append(f"{key}")
             else:
-                args_list.append(f"--{key}")
+                args_list.append(f"{key}")
                 args_list.append(str(value))
         return parser.parse_args(args_list)
     else:
