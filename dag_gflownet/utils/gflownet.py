@@ -2,7 +2,7 @@ import numpy as np
 import jax.numpy as jnp
 import optax
 
-from tqdm.auto import trange
+from tqdm.autonotebook import trange
 from jax import nn, lax, random
 
 
