@@ -69,8 +69,9 @@
     multiple algorithms to learn the structure of a DAG from data including ......}
 
 \begin{document}
+
     \maketitle
-%
+    \\
 
 
     \section{Introduction}
@@ -377,7 +378,6 @@
         \mathcal{L}(\phi) = \mathbb{E}_{\pi} \left[ \left[ \log
         \frac{R(G')P_{\psi}(G \mid G')P_{\phi}(s_f \mid G)}{R(G)P_{\phi}(G' \mid G)P_{\phi}(s_f \mid G')} \right]^2 \right].
         \label{eq:off_policy_loss}
-
     \end{equation}
 
     Inspired by reinforcement learning again, the distribution $\pi$ could be learned on-policy as
@@ -423,17 +423,17 @@
         \centering
         \begin{tabular}{|l|c|c|c|}
             \hline
-            \textbf{Dataset} & \textbf{Nodes} & \textbf{Average # Edges} & \textbf{Data Size} \\
+            \textbf{Dataset} & \textbf{Nodes} & \textbf{Average \# Edges} & \textbf{Data Size} \\
             \hline
-            Dataset 1.1      & 5              & 10                       & 30                 \\
-            Dataset 1.2      & ---            & ---                      & 50                 \\
+            Dataset 1.1      & 5              & 10                        & 30                 \\
+            Dataset 1.2      & ---            & ---                       & 50                 \\
             \hline
-            Dataset 2.1.1    & 10             & 20                       & 150                \\
-            Dataset 2.1.2    & ---            & ---                      & 250                \\
-            Dataset 2.1.3    & ---            & ---                      & 80                 \\
+            Dataset 2.1.1    & 10             & 20                        & 150                \\
+            Dataset 2.1.2    & ---            & ---                       & 250                \\
+            Dataset 2.1.3    & ---            & ---                       & 80                 \\
             \hline
-            Dataset 2.2.1    & ---            & 30                       & 100                \\
-            Dataset 2.2.2    & ---            & ---                      & 200                \\
+            Dataset 2.2.1    & ---            & 30                        & 100                \\
+            Dataset 2.2.2    & ---            & ---                       & 200                \\
 %            \hline
 %            Dataset 3.1      & 15             & 45                       & 150                \\
 %            Dataset 3.2      & ---            & ---                      & 250                \\
@@ -560,11 +560,11 @@
         \centering
         \begin{tabular}{|l|c|c|}
             \hline
-            \textbf{Dataset} & \textbf{Prefill Buffer} & \textbf{# Iterations} & \textbf{Experiment Count} \\
+            \textbf{Dataset} & \textbf{Prefill Buffer} & \textbf{\# Iterations} & \textbf{Experiment Count} \\
             \hline
-            Dataset 1.1-.2   & 500                     & 50,000                & 5                         \\
-            Dataset 2.1.1-.3 & 1000                    & 100,000               & 2                         \\
-            Dataset 2.2.1-.2 & 1000                    & 100,000               & 2                         \\
+            Dataset 1.1-.2   & 500                     & 50,000                 & 5                         \\
+            Dataset 2.1.1-.3 & 1000                    & 100,000                & 2                         \\
+            Dataset 2.2.1-.2 & 1000                    & 100,000                & 2                         \\
 %            Dataset 3.1-.3   & 2000                    & 200,000               & 1                         \\
             \hline
         \end{tabular}
@@ -610,104 +610,84 @@
     under discussion. Fig.~\ref{fig:illustration_10_15} has the same
     interpretation as Fig.~\ref{fig:illustration_5_8}.
 
-    % figure with 2 subfigures and two lines
+
     \begin{figure*}[h]
         \centering
-        \begin{subfigure}
+        \begin{subfigure}{0.48\textwidth}
             \centering
-            \includegraphics[width=0.48\textwidth]{figures/BGe_5_8_30}
-            \label{fig:bge_score_5_8_30}
+            \includegraphics[width=\textwidth]{figures/BGe_5_8_30}
+            \caption{BGe score distribution for Dataset 1.1.}
+            \label{subfig:bge_score_5_8_30}
         \end{subfigure}
-        \begin{subfigure}
+        \begin{subfigure}{0.48\textwidth}
             \centering
-            \includegraphics[width=0.48\textwidth]{figures/BGe_5_8_50}
-            \label{fig:bge_score_5_8_50}
+            \includegraphics[width=\textwidth]{figures/BGe_5_8_50}
+            \caption{BGe score distribution for Dataset 1.2.}
+            \label{subfig:bge_score_5_8_50}
         \end{subfigure}
         \hfill
-        \begin{subfigure}
+        \begin{subfigure}{0.48\textwidth}
             \centering
-            \includegraphics[width=0.48\textwidth]{figures/P_d_prime_5_8_30}
-            \label{fig:p_d_5_8_30}
+            \includegraphics[width=\textwidth]{figures/P_d_prime_5_8_30}
+            \caption{Held-out likelihood for Dataset 1.1.}
+            \label{subfig:p_d_5_8_30}
         \end{subfigure}
-        \begin{subfigure}
+        \begin{subfigure}{0.48\textwidth}
             \centering
-            \includegraphics[width=0.48\textwidth]{figures/P_d_prime_5_8_50}
-            \label{fig:p_d_5_8_50}
+            \includegraphics[width=\textwidth]{figures/P_d_prime_5_8_50}
+            \caption{Held-out likelihood for Dataset 1.2.}
+            \label{subfig:p_d_5_8_50}
         \end{subfigure}
-        \caption{BGe score distribution and held-out likelihood results for Dataset 1.1 and Dataset 1.2. For Fig.~\ref{
-            fig:bge_score_5_8_30, fig:bge_score_5_8_50}, the x-axis represents the experiment and the y-axis
-        represents the BGe score distribution. For Fig.~\ref{fig:p_d_5_8_30, fig:p_d_5_8_50}, the x-axis
+        \caption{BGe score distribution and held-out likelihood results for Dataset 1.1 and Dataset 1.2. For Fig.~\ref{subfig:bge_score_5_8_30} and~\ref{subfig:bge_score_5_8_50}, the x-axis represents the experiment and the y-axis
+        represents the BGe score distribution. For Fig.~\ref{subfig:p_d_5_8_30} and~\ref{subfig:p_d_5_8_50}, the x-axis
         represents the experiment and the y-axis represents the held-out likelihood.}
         \label{fig:illustration_5_8}
     \end{figure*}
 
     \begin{figure*}[h]
         \centering
-        \begin{subfigure}
+        \begin{subfigure}{0.32\textwidth}
             \centering
-            \includegraphics[width=0.32\textwidth]{figures/BGe_10_15_80}
+            \includegraphics[width=\textwidth]{figures/BGe_10_15_80}
+            \caption{BGe score distribution for Dataset 2.1.1.}
             \label{fig:bge_score_10_15_80}
         \end{subfigure}
-        \begin{subfigure}
+        \begin{subfigure}{0.32\textwidth}
             \centering
-            \includegraphics[width=0.32\textwidth]{figures/BGe_10_15_150}
+            \includegraphics[width=\textwidth]{figures/BGe_10_15_150}
+            \caption{BGe score distribution for Dataset 2.1.2.}
             \label{fig:bge_score_10_15_150}
         \end{subfigure}
-        \begin{subfigure}
+        \begin{subfigure}{0.32\textwidth}
             \centering
-            \includegraphics[width=0.32\textwidth]{figures/BGe_10_15_250}
+            \includegraphics[width=\textwidth]{figures/BGe_10_15_250}
+            \caption{BGe score distribution for Dataset 2.1.3.}
             \label{fig:bge_score_10_15_250}
         \end{subfigure}
         \hfill
-        \begin{subfigure}
+        \begin{subfigure}{0.32\textwidth}
             \centering
-            \includegraphics[width=0.32\textwidth]{figures/P_d_prime_10_15_80}
+            \includegraphics[width=\textwidth]{figures/P_d_prime_10_15_80}
+            \caption{Held-out likelihood for Dataset 2.1.1.}
             \label{fig:p_d_10_15_80}
         \end{subfigure}
-        \begin{subfigure}
+        \begin{subfigure}{0.32\textwidth}
             \centering
-            \includegraphics[width=0.32\textwidth]{figures/P_d_prime_10_15_150}
+            \includegraphics[width=\textwidth]{figures/P_d_prime_10_15_150}
+            \caption{Held-out likelihood for Dataset 2.1.2.}
             \label{fig:p_d_10_15_150}
         \end{subfigure}
-        \begin{subfigure}
+        \begin{subfigure}{0.32\textwidth}
             \centering
-            \includegraphics[width=0.32\textwidth]{figures/P_d_prime_10_15_250}
+            \includegraphics[width=\textwidth]{figures/P_d_prime_10_15_250}
+            \caption{Held-out likelihood for Dataset 2.1.3.}
             \label{fig:p_d_10_15_250}
         \end{subfigure}
-        \caption{BGe score distribution and held-out likelihood for Dataset 2.1.1 (Fig.~\ref{fig:bge_score_10_15_80,
-            fig:p_d_10_15_80}), Dataset 2.1.2 (Fig.~\ref{fig:bge_score_10_15_150, fig:p_d_10_15_150}), and Dataset
-        2.1.3 (Fig.~\ref{fig:bge_score_10_15_250, fig:p_d_10_15_250}).}
+        \caption{BGe score distribution and held-out likelihood for Dataset 2.1.1: Fig.~\ref{fig:bge_score_10_15_80} and~\ref{fig:p_d_10_15_80}, Dataset 2.1.2: Fig.~\ref{fig:bge_score_10_15_150} and~\ref{fig:p_d_10_15_150}, and Dataset
+        2.1.3: Fig.~\ref{fig:bge_score_10_15_250} and~\ref{fig:p_d_10_15_250}. X-axis represents the experiment and
+        the y-axis represents the BGe score distribution and held-out likelihood.}
         \label{fig:illustration_10_15}
     \end{figure*}
-
-%    \begin{figure}[h]
-%        \centering
-%        \begin{subfigure}
-%            \centering
-%            \includegraphics[width=0.48\textwidth]{figures/BGe_15_30_150}
-%            \label{fig:bge_score_15_30_150}
-%        \end{subfigure}
-%        \begin{subfigure}
-%            \centering
-%            \includegraphics[width=0.48\textwidth]{figures/BGe_15_30_250}
-%            \label{fig:bge_score_15_30_250}
-%        \end{subfigure}
-%        \hfill
-%        \begin{subfigure}
-%            \centering
-%            \includegraphics[width=0.48\textwidth]{figures/P_d_prime_15_30_150}
-%            \label{fig:p_d_15_30_150}
-%        \end{subfigure}
-%        \begin{subfigure}
-%            \centering
-%            \includegraphics[width=0.48\textwidth]{figures/P_d_prime_15_30_250}
-%            \label{fig:p_d_15_30_250}
-%        \end{subfigure}
-%        \caption{BGe score distribution and held-out likelihood for Dataset 2.2.1 (Fig.~
-%        \ref{fig:bge_score_15_30_150,
-%        fig:p_d_15_30_150}) and Dataset 2.2.2 (Fig.~\ref{fig:bge_score_15_30_250, fig:p_d_15_30_250}).}
-%        \label{fig:illustration_15_30}
-%    \end{figure}
 
     \subsubsection{E-SHD and AUROC and AUPRC}
 
@@ -717,27 +697,30 @@
 
     \begin{figure*}[h]
         \centering
-        \begin{subfigure}
+        \begin{subfigure}{0.98\textwidth}
             \centering
-            \includegraphics[width=0.32\textwidth]{figures/expected_0_5_8}
+            \includegraphics[width=\textwidth]{figures/expected_0_5_8}
+            \caption{E-SHD results for Dataset 1.1 and Dataset 1.2.}
             \label{fig:eshd_5_8}
         \end{subfigure}
-        \begin{subfigure}
+        \begin{subfigure}{0.98\textwidth}
             \centering
-            \includegraphics[width=0.32\textwidth]{figures/auroc_5_8}
+            \includegraphics[width=\textwidth]{figures/expected_1_5_8}
+            \caption{AUROC results for Dataset 1.1 and Dataset 1.2.}
             \label{fig:auroc_5_8}
         \end{subfigure}
-        \begin{subfigure}
+        \begin{subfigure}{0.98\textwidth}
             \centering
-            \includegraphics[width=0.32\textwidth]{figures/auprc_5_8}
+            \includegraphics[width=\textwidth]{figures/expected_2_5_8}
+            \caption{AUPRC results for Dataset 1.1 and Dataset 1.2.}
             \label{fig:auprc_5_8}
         \end{subfigure}
         \caption{E-SHD, AUROC, and AUPRC results for Dataset 1.1 and Dataset 1.2. Fig.~\ref{fig:eshd_5_8} shows
-        the E-SHD result for different experiments (x-axis) and the y-axis represents the E-SHD value. Fig.~\ref{
-            fig:auroc_5_8, fig:auprc_5_8} shows the AUROC and AUPRC results for different experiments (x-axis) and the
-        y-axis represents the AUROC and AUPRC values respectively.}
+        the E-SHD result for different experiments (x-axis) and the y-axis represents the E-SHD value. Fig.~\ref{fig:auroc_5_8} and~\ref{fig:auprc_5_8} show the AUROC and AUPRC results for different experiments (x-axis) and the
+        y-axis represents the AUROC and AUPRC values respectively. Note that in each figure, different colors show results for different data
+        sizes.}
         \label{fig:metrics_dataset_1}
-    \end{figure}
+    \end{figure*}
 
 
     \section{Conclusion}\label{sec:conclusion}
@@ -775,11 +758,11 @@
         \centering
         \begin{tabular}{|l|c|c|c|}
             \hline
-            \textbf{Dataset} & \textbf{Nodes} & \textbf{Average # Edges} & \textbf{Data Size} \\
+            \textbf{Dataset} & \textbf{Nodes} & \textbf{Average \# Edges} & \textbf{Data Size} \\
             \hline
-            Dataset 3.1      & 15             & 45                       & 150                \\
-            Dataset 3.2      & ---            & ---                      & 250                \\
-            Dataset 3.3      & ---            & ---                      & 500                \\
+            Dataset 3.1      & 15             & 45                        & 150                \\
+            Dataset 3.2      & ---            & ---                       & 250                \\
+            Dataset 3.3      & ---            & ---                       & 500                \\
             \hline
         \end{tabular}
         \caption{Datasets that could be used for future work.}
@@ -788,6 +771,8 @@
 
 
     \pagebreak
+    \newpage
+    \clearpage
     \bibliographystyle{ieee_fullname}
     \bibliography{references}
 
