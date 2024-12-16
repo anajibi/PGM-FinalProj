@@ -466,17 +466,19 @@
     \subsection{Evaluation Metrics}
     \vspace*{-3mm}
 
-    We evaluated the acquired posterior probability distribution $P(G|D)$ using various evaluation metrics. In this
+    We evaluated the acquired posterior probability distribution 
+     using various evaluation metrics. In this
     section, we give a brief overview of the evaluation metrics used in the experiments and how they are calculated.
+    
     \vspace*{3mm}
-    \textbf{Structural Hamming Distance (SHD)} is a metric that measures the number of incorrect edges in the
+    \noindent\textbf{Structural Hamming Distance (SHD)} is a metric that measures the number of incorrect edges in the
     predicted graph. It is calculated as the sum of the number of false positives and false negatives. We will
     evaluate the learned distribution using SHD. Generating multiple samples from the learned distribution,
     we will calculate expected E-SHD (Expected Structural Hamming Distance) and compare these numbers over different
     datasets to evaluate the performance of the proposed approach.
 
     \vspace*{3mm}
-    \textbf{AUROC (Area Under the ROC Curve):}
+    \noindent\textbf{AUROC (Area Under the ROC Curve):}
     \begin{itemize}
         \item The ROC curve plots the \textit{True Positive Rate (TPR)} (Sensitivity) against the \textit{False Positive Rate (FPR)} at different threshold levels.
         \item The AUROC value represents the probability that a randomly chosen positive instance is ranked higher than a randomly chosen negative instance.
@@ -487,7 +489,7 @@
 
 
     \vspace*{3mm}
-    \textbf{AUPRC (Area Under the Precision-Recall Curve):}
+    \noindent\textbf{AUPRC (Area Under the Precision-Recall Curve):}
     \begin{itemize}
         \item The Precision-Recall curve plots \textit{Precision} ($\text{TP} / (\text{TP} + \text{FP})$) against \textit{Recall} ($\text{TP} / (\text{TP} + \text{FN})$) at different threshold levels.
         \item The AUPRC value focuses on the performance for the positive class (edges in the graph) and summarizes the trade-off between precision and recall.
@@ -498,7 +500,7 @@
 
 
     \vspace*{3mm}
-    \textbf{BGe Score} is a metric that measures the likelihood of the data given the learned DAG. To have a
+    \noindent\textbf{BGe Score} is a metric that measures the likelihood of the data given the learned DAG. To have a
     quantitative measure of how close the learned DAG is to the ground truth DAG, we will calculate the BGe score
     for a number of sampled DAGs from the learned distribution and compare the BGe score of the ground truth DAG with
     the learned DAGs.
@@ -522,7 +524,7 @@
     distribution.
 
     \vspace*{3mm}
-    \textbf{$P(D' \mid D)$} To quantify the quality of the learned distribution in sampling consistent DAGs with the
+    \noindent\textbf{$P(D' \mid D)$} To quantify the quality of the learned distribution in sampling consistent DAGs with the
     original distribution, we will evaluate the likelihood of a held-out dataset $D'$ given observations. This
     probability could be quantified as:
     \begin{equation}
@@ -556,9 +558,9 @@
     experiments. In Table~\ref{tab:shrd_hyperparameters}, \textit{Prior Dist.} refers to the prior distribution
     $P(G)$ used in the experiments according to Eq.~\eqref{eq:reward_function}.
 
-    \begin{table}[h]
+    \begin{table*}[h]
         \centering
-        \begin{tabular}{|l|c|c|}
+        \begin{tabular}{|l|c|c|c|}
             \hline
             \textbf{Dataset} & \textbf{Prefill Buffer} & \textbf{\# Iterations} & \textbf{Experiment Count} \\
             \hline
@@ -570,7 +572,7 @@
         \end{tabular}
         \caption{Hyperparameters used in the experiments for each dataset.}
         \label{tab:db_hyperparameters}
-    \end{table}
+    \end{table*}
 
     \begin{table}[h]
         \centering
@@ -700,24 +702,10 @@
         \begin{subfigure}{0.98\textwidth}
             \centering
             \includegraphics[width=\textwidth]{figures/expected_0_5_8}
-            \caption{E-SHD results for Dataset 1.1 and Dataset 1.2.}
+            \caption{E-SHD, AUROC, AUPRC results for Dataset 1.1 and Dataset 1.2.}
             \label{fig:eshd_5_8}
         \end{subfigure}
-        \begin{subfigure}{0.98\textwidth}
-            \centering
-            \includegraphics[width=\textwidth]{figures/expected_1_5_8}
-            \caption{AUROC results for Dataset 1.1 and Dataset 1.2.}
-            \label{fig:auroc_5_8}
-        \end{subfigure}
-        \begin{subfigure}{0.98\textwidth}
-            \centering
-            \includegraphics[width=\textwidth]{figures/expected_2_5_8}
-            \caption{AUPRC results for Dataset 1.1 and Dataset 1.2.}
-            \label{fig:auprc_5_8}
-        \end{subfigure}
-        \caption{E-SHD, AUROC, and AUPRC results for Dataset 1.1 and Dataset 1.2. Fig.~\ref{fig:eshd_5_8} shows
-        the E-SHD result for different experiments (x-axis) and the y-axis represents the E-SHD value. Fig.~\ref{fig:auroc_5_8} and~\ref{fig:auprc_5_8} show the AUROC and AUPRC results for different experiments (x-axis) and the
-        y-axis represents the AUROC and AUPRC values respectively. Note that in each figure, different colors show results for different data
+        \caption{E-SHD, AUROC, and AUPRC results for Dataset 1.1 and Dataset 1.2. Note that in each figure, different colors show results for different data
         sizes.}
         \label{fig:metrics_dataset_1}
     \end{figure*}
@@ -745,7 +733,35 @@
     \section{Conclusion}\label{sec:conclusion}
     \vspace*{-3mm}
 
-    To start with the conclusion, we should firstly start with the comparisons of
+    To start with the conclusion, we should firstly start with the comparisons of the BGe scores, and held-out
+    likelihoods. Let's firstly start with Fig.~\ref{fig:illustration_5_8}, from the distribution of the BGe scores and
+    the ground truth BGe score, we can see that the samples graphs are closely aligned with the ground truth graph
+    in terms of BGe score. This is a good indication that the proposed approach is able to learn the structure of the
+    graph well.
+
+    Furthermore, the held-out likelihood results show that the learned distribution is able to generalize well for the
+    held-out dataset. Although the alignment is not perfect, but considering the fact that the size of data $\mathcal{D}$
+    is small, the results are promising.
+
+    In comparison between results for different data sizes, we can see that in Fig.~\ref{subfig:bge_score_5_8_50}
+    has a better alignment with the ground truth BGe score compared to Fig.~\ref{subfig:bge_score_5_8_30}. This
+    clearly shows that this model is dependent on the size of the input data.
+
+    Moving forward to Fig.~\ref{fig:p_d_10_15_80} to Fig.~\ref{fig:p_d_10_15_250}, we can see that the held-out
+    likelihood results are not as consistent as for Dataset 1. This can show that although increasing the size of
+    the data results in more concentrated posterior distribution, the distribution is not close enough to the ground
+    truth. This could be due to the complexity of the graph structure and the size of the data.
+
+    Mooving to E-SHD, AUROC, and AUPRC results, we can see that although the results for E-SHD is not promising,
+    evaluated AUROC and AUPRC results show that for a less complex graph, AUROC is higher compared to AUPRC which shows
+    consistency with theoretical analysis. However, for a more complex graph, the results are not as promising. This
+    reasoning is consistent for Dataset 2 as well.
+
+
+    While the proposed approach showed promising results compared to traditional methods, there remains room for
+    improvement. Addressing computational limitations and exploring better mechanisms for handling complex graph
+    structures could enhance scalability and robustness. These findings lay a solid foundation for further
+    advancements in Bayesian structure learning using GFlowNets.
 
 
     \section{Future Work}\label{sec:future_work}
