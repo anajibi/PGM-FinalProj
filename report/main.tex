@@ -69,8 +69,9 @@
     multiple algorithms to learn the structure of a DAG from data including ......}
 
 \begin{document}
+
     \maketitle
-%
+    \\
 
 
     \section{Introduction}
@@ -377,7 +378,6 @@
         \mathcal{L}(\phi) = \mathbb{E}_{\pi} \left[ \left[ \log
         \frac{R(G')P_{\psi}(G \mid G')P_{\phi}(s_f \mid G)}{R(G)P_{\phi}(G' \mid G)P_{\phi}(s_f \mid G')} \right]^2 \right].
         \label{eq:off_policy_loss}
-
     \end{equation}
 
     Inspired by reinforcement learning again, the distribution $\pi$ could be learned on-policy as
@@ -423,17 +423,17 @@
         \centering
         \begin{tabular}{|l|c|c|c|}
             \hline
-            \textbf{Dataset} & \textbf{Nodes} & \textbf{Average # Edges} & \textbf{Data Size} \\
+            \textbf{Dataset} & \textbf{Nodes} & \textbf{Average \# Edges} & \textbf{Data Size} \\
             \hline
-            Dataset 1.1      & 5              & 10                       & 30                 \\
-            Dataset 1.2      & ---            & ---                      & 50                 \\
+            Dataset 1.1      & 5              & 10                        & 30                 \\
+            Dataset 1.2      & ---            & ---                       & 50                 \\
             \hline
-            Dataset 2.1.1    & 10             & 20                       & 150                \\
-            Dataset 2.1.2    & ---            & ---                      & 250                \\
-            Dataset 2.1.3    & ---            & ---                      & 80                 \\
+            Dataset 2.1.1    & 10             & 20                        & 150                \\
+            Dataset 2.1.2    & ---            & ---                       & 250                \\
+            Dataset 2.1.3    & ---            & ---                       & 80                 \\
             \hline
-            Dataset 2.2.1    & ---            & 30                       & 100                \\
-            Dataset 2.2.2    & ---            & ---                      & 200                \\
+            Dataset 2.2.1    & ---            & 30                        & 100                \\
+            Dataset 2.2.2    & ---            & ---                       & 200                \\
 %            \hline
 %            Dataset 3.1      & 15             & 45                       & 150                \\
 %            Dataset 3.2      & ---            & ---                      & 250                \\
@@ -560,11 +560,11 @@
         \centering
         \begin{tabular}{|l|c|c|}
             \hline
-            \textbf{Dataset} & \textbf{Prefill Buffer} & \textbf{# Iterations} & \textbf{Experiment Count} \\
+            \textbf{Dataset} & \textbf{Prefill Buffer} & \textbf{\# Iterations} & \textbf{Experiment Count} \\
             \hline
-            Dataset 1.1-.2   & 500                     & 50,000                & 5                         \\
-            Dataset 2.1.1-.3 & 1000                    & 100,000               & 2                         \\
-            Dataset 2.2.1-.2 & 1000                    & 100,000               & 2                         \\
+            Dataset 1.1-.2   & 500                     & 50,000                 & 5                         \\
+            Dataset 2.1.1-.3 & 1000                    & 100,000                & 2                         \\
+            Dataset 2.2.1-.2 & 1000                    & 100,000                & 2                         \\
 %            Dataset 3.1-.3   & 2000                    & 200,000               & 1                         \\
             \hline
         \end{tabular}
@@ -610,104 +610,84 @@
     under discussion. Fig.~\ref{fig:illustration_10_15} has the same
     interpretation as Fig.~\ref{fig:illustration_5_8}.
 
-    % figure with 2 subfigures and two lines
+
     \begin{figure*}[h]
         \centering
-        \begin{subfigure}
+        \begin{subfigure}{0.48\textwidth}
             \centering
-            \includegraphics[width=0.48\textwidth]{figures/BGe_5_8_30}
-            \label{fig:bge_score_5_8_30}
+            \includegraphics[width=\textwidth]{figures/BGe_5_8_30}
+            \caption{BGe score distribution for Dataset 1.1.}
+            \label{subfig:bge_score_5_8_30}
         \end{subfigure}
-        \begin{subfigure}
+        \begin{subfigure}{0.48\textwidth}
             \centering
-            \includegraphics[width=0.48\textwidth]{figures/BGe_5_8_50}
-            \label{fig:bge_score_5_8_50}
+            \includegraphics[width=\textwidth]{figures/BGe_5_8_50}
+            \caption{BGe score distribution for Dataset 1.2.}
+            \label{subfig:bge_score_5_8_50}
         \end{subfigure}
         \hfill
-        \begin{subfigure}
+        \begin{subfigure}{0.48\textwidth}
             \centering
-            \includegraphics[width=0.48\textwidth]{figures/P_d_prime_5_8_30}
-            \label{fig:p_d_5_8_30}
+            \includegraphics[width=\textwidth]{figures/P_d_prime_5_8_30}
+            \caption{Held-out likelihood for Dataset 1.1.}
+            \label{subfig:p_d_5_8_30}
         \end{subfigure}
-        \begin{subfigure}
+        \begin{subfigure}{0.48\textwidth}
             \centering
-            \includegraphics[width=0.48\textwidth]{figures/P_d_prime_5_8_50}
-            \label{fig:p_d_5_8_50}
+            \includegraphics[width=\textwidth]{figures/P_d_prime_5_8_50}
+            \caption{Held-out likelihood for Dataset 1.2.}
+            \label{subfig:p_d_5_8_50}
         \end{subfigure}
-        \caption{BGe score distribution and held-out likelihood results for Dataset 1.1 and Dataset 1.2. For Fig.~\ref{
-            fig:bge_score_5_8_30, fig:bge_score_5_8_50}, the x-axis represents the experiment and the y-axis
-        represents the BGe score distribution. For Fig.~\ref{fig:p_d_5_8_30, fig:p_d_5_8_50}, the x-axis
+        \caption{BGe score distribution and held-out likelihood results for Dataset 1.1 and Dataset 1.2. For Fig.~\ref{subfig:bge_score_5_8_30} and~\ref{subfig:bge_score_5_8_50}, the x-axis represents the experiment and the y-axis
+        represents the BGe score distribution. For Fig.~\ref{subfig:p_d_5_8_30} and~\ref{subfig:p_d_5_8_50}, the x-axis
         represents the experiment and the y-axis represents the held-out likelihood.}
         \label{fig:illustration_5_8}
     \end{figure*}
 
     \begin{figure*}[h]
         \centering
-        \begin{subfigure}
+        \begin{subfigure}{0.32\textwidth}
             \centering
-            \includegraphics[width=0.32\textwidth]{figures/BGe_10_15_80}
+            \includegraphics[width=\textwidth]{figures/BGe_10_15_80}
+            \caption{BGe score distribution for Dataset 2.1.1.}
             \label{fig:bge_score_10_15_80}
         \end{subfigure}
-        \begin{subfigure}
+        \begin{subfigure}{0.32\textwidth}
             \centering
-            \includegraphics[width=0.32\textwidth]{figures/BGe_10_15_150}
+            \includegraphics[width=\textwidth]{figures/BGe_10_15_150}
+            \caption{BGe score distribution for Dataset 2.1.2.}
             \label{fig:bge_score_10_15_150}
         \end{subfigure}
-        \begin{subfigure}
+        \begin{subfigure}{0.32\textwidth}
             \centering
-            \includegraphics[width=0.32\textwidth]{figures/BGe_10_15_250}
+            \includegraphics[width=\textwidth]{figures/BGe_10_15_250}
+            \caption{BGe score distribution for Dataset 2.1.3.}
             \label{fig:bge_score_10_15_250}
         \end{subfigure}
         \hfill
-        \begin{subfigure}
+        \begin{subfigure}{0.32\textwidth}
             \centering
-            \includegraphics[width=0.32\textwidth]{figures/P_d_prime_10_15_80}
+            \includegraphics[width=\textwidth]{figures/P_d_prime_10_15_80}
+            \caption{Held-out likelihood for Dataset 2.1.1.}
             \label{fig:p_d_10_15_80}
         \end{subfigure}
-        \begin{subfigure}
+        \begin{subfigure}{0.32\textwidth}
             \centering
-            \includegraphics[width=0.32\textwidth]{figures/P_d_prime_10_15_150}
+            \includegraphics[width=\textwidth]{figures/P_d_prime_10_15_150}
+            \caption{Held-out likelihood for Dataset 2.1.2.}
             \label{fig:p_d_10_15_150}
         \end{subfigure}
-        \begin{subfigure}
+        \begin{subfigure}{0.32\textwidth}
             \centering
-            \includegraphics[width=0.32\textwidth]{figures/P_d_prime_10_15_250}
+            \includegraphics[width=\textwidth]{figures/P_d_prime_10_15_250}
+            \caption{Held-out likelihood for Dataset 2.1.3.}
             \label{fig:p_d_10_15_250}
         \end{subfigure}
-        \caption{BGe score distribution and held-out likelihood for Dataset 2.1.1 (Fig.~\ref{fig:bge_score_10_15_80,
-            fig:p_d_10_15_80}), Dataset 2.1.2 (Fig.~\ref{fig:bge_score_10_15_150, fig:p_d_10_15_150}), and Dataset
-        2.1.3 (Fig.~\ref{fig:bge_score_10_15_250, fig:p_d_10_15_250}).}
+        \caption{BGe score distribution and held-out likelihood for Dataset 2.1.1: Fig.~\ref{fig:bge_score_10_15_80} and~\ref{fig:p_d_10_15_80}, Dataset 2.1.2: Fig.~\ref{fig:bge_score_10_15_150} and~\ref{fig:p_d_10_15_150}, and Dataset
+        2.1.3: Fig.~\ref{fig:bge_score_10_15_250} and~\ref{fig:p_d_10_15_250}. X-axis represents the experiment and
+        the y-axis represents the BGe score distribution and held-out likelihood.}
         \label{fig:illustration_10_15}
     \end{figure*}
-
-%    \begin{figure}[h]
-%        \centering
-%        \begin{subfigure}
-%            \centering
-%            \includegraphics[width=0.48\textwidth]{figures/BGe_15_30_150}
-%            \label{fig:bge_score_15_30_150}
-%        \end{subfigure}
-%        \begin{subfigure}
-%            \centering
-%            \includegraphics[width=0.48\textwidth]{figures/BGe_15_30_250}
-%            \label{fig:bge_score_15_30_250}
-%        \end{subfigure}
-%        \hfill
-%        \begin{subfigure}
-%            \centering
-%            \includegraphics[width=0.48\textwidth]{figures/P_d_prime_15_30_150}
-%            \label{fig:p_d_15_30_150}
-%        \end{subfigure}
-%        \begin{subfigure}
-%            \centering
-%            \includegraphics[width=0.48\textwidth]{figures/P_d_prime_15_30_250}
-%            \label{fig:p_d_15_30_250}
-%        \end{subfigure}
-%        \caption{BGe score distribution and held-out likelihood for Dataset 2.2.1 (Fig.~
-%        \ref{fig:bge_score_15_30_150,
-%        fig:p_d_15_30_150}) and Dataset 2.2.2 (Fig.~\ref{fig:bge_score_15_30_250, fig:p_d_15_30_250}).}
-%        \label{fig:illustration_15_30}
-%    \end{figure}
 
     \subsubsection{E-SHD and AUROC and AUPRC}
 
@@ -717,296 +697,321 @@
 
     \begin{figure*}[h]
         \centering
-        \begin{subfigure}
+        \begin{subfigure}{0.98\textwidth}
             \centering
-            \includegraphics[width=0.32\textwidth]{figures/expected_0_5_8}
+            \includegraphics[width=\textwidth]{figures/expected_0_5_8}
+            \caption{E-SHD results for Dataset 1.1 and Dataset 1.2.}
             \label{fig:eshd_5_8}
         \end{subfigure}
-        \begin{subfigure}
+        \begin{subfigure}{0.98\textwidth}
             \centering
-            \includegraphics[width=0.32\textwidth]{figures/auroc_5_8}
+            \includegraphics[width=\textwidth]{figures/expected_1_5_8}
+            \caption{AUROC results for Dataset 1.1 and Dataset 1.2.}
             \label{fig:auroc_5_8}
         \end{subfigure}
-        \begin{subfigure}
+        \begin{subfigure}{0.98\textwidth}
             \centering
-            \includegraphics[width=0.32\textwidth]{figures/auprc_5_8}
+            \includegraphics[width=\textwidth]{figures/expected_2_5_8}
+            \caption{AUPRC results for Dataset 1.1 and Dataset 1.2.}
             \label{fig:auprc_5_8}
         \end{subfigure}
         \caption{E-SHD, AUROC, and AUPRC results for Dataset 1.1 and Dataset 1.2. Fig.~\ref{fig:eshd_5_8} shows
-        the E-SHD result for different experiments (x-axis) and the y-axis represents the E-SHD value. Fig.~\ref{
-            fig:auroc_5_8, fig:auprc_5_8} shows the AUROC and AUPRC results for different experiments (x-axis) and the
-        y-axis represents the AUROC and AUPRC values respectively.}
+        the E-SHD result for different experiments (x-axis) and the y-axis represents the E-SHD value. Fig.~\ref{fig:auroc_5_8} and~\ref{fig:auprc_5_8} show the AUROC and AUPRC results for different experiments (x-axis) and the
+        y-axis represents the AUROC and AUPRC values respectively. Note that in each figure, different colors show results for different data
+        sizes.}
         \label{fig:metrics_dataset_1}
-    \end{figure}
+    \end{figure*}
 
-
-    \section{Conclusion}\label{sec:conclusion}
-    \vspace*{-3mm}
-
-
-    \section{Future Work}\label{sec:future_work}
-    \vspace*{-3mm}
-
-    This project was a great opportunity to understand the recent advancements in the field of Bayesian Structure
-    Learning. We have implemented the proposed approach in~\cite{deleu2022daggflownet} and conducted experiments to
-    evaluate the performance of the proposed approach. We have used synthetic datasets to evaluate the performance of
-    the proposed approach on graphs with different complexities and sizes. Numerous evaluation metrics were used to
-    evaluate the performance of this approach. However, due to the scale of this project, we could not further
-    explore the following directions and these could be suggestions for future work:
-
-    \begin{itemize}
-        \item \textbf{Real-world Datasets:} In this project, we used synthetic datasets to evaluate the performance of
-        the proposed approach. However, it would be interesting to evaluate the performance of the proposed approach
-        on real-world datasets. This could give us a better understanding of the robustness of the proposed approach
-        in real-world scenarios.
-        \item \textbf{Comparison with other Approaches:} In this project, we have implemented the proposed approach
-        in~\cite{deleu2022daggflownet} and conducted experiments to evaluate the performance of the proposed approach.
-        However, it would be interesting to compare the performance of the proposed approach with other approaches in
-        the field of Bayesian Structure Learning.
-        \item \textbf{Hyperparameter Tuning:} In this project, we have used a set of hyperparameters for the
-        experiments. However, it would be interesting to conduct experiments with different hyperparameters to
-        evaluate the performance of the proposed approach with different hyperparameters.
-        \item And lastly, to our regret, we planned performing experiments on larger graphs included in
-        Table~\ref{tab:future_dataset}, however because of the limited time and resources we had in hand,
-        further exploration of these datasets was not possible.
-    \end{itemize}
+    Table~\ref{tab:metrics_dataset_2} shows the results for E-SHD, AUROC, and AUPRC metrics for Dataset 2.1 and Dataset 2.2.
 
     \begin{table}[h]
         \centering
         \begin{tabular}{|l|c|c|c|}
             \hline
-            \textbf{Dataset} & \textbf{Nodes} & \textbf{Average # Edges} & \textbf{Data Size} \\
+            \textbf{Dataset} & \textbf{E-SHD} & \textbf{AUROC} & \textbf{AUPRC} \\
             \hline
-            Dataset 3.1      & 15             & 45                       & 150                \\
-            Dataset 3.2      & ---            & ---                      & 250                \\
-            Dataset 3.3      & ---            & ---                      & 500                \\
+            Dataset 2.1.1    & 29.316, 28.067 & 0.564, 0.753   & 0.223, 0.299   \\
+            Dataset 2.1.2    & 26.721, 28.209 & 0.737, 0.629   & 0.415, 0.494   \\
+            Dataset 2.1.3    & 29.772, 25.321 & 0.563, 0.659   & 0.230, 0.309   \\
+            Dataset 2.2.1    & 28.468, 25.75  & 0.580, 0.700   & 0.312, 0.467   \\
+            Dataset 2.2.2    & 30.67, 29.997  & 0.520, 0.513   & 0.358, 0.363   \\
             \hline
         \end{tabular}
-        \caption{Datasets that could be used for future work.}
-        \label{tab:future_dataset}
-    \end{table}
+        \caption{E-SHD, AUROC, and AUPRC results for Dataset 2.1 and Dataset 2.2.}
+        \label{tab:metrics_dataset_2}
 
 
-    \pagebreak
-    \bibliographystyle{ieee_fullname}
-    \bibliography{references}
+        \section{Conclusion}\label{sec:conclusion}
+        \vspace*{-3mm}
 
-    \makeappendix
-
-    \appendix
-
-    \counterwithin*{equation}{section}
-    \renewcommand\theequation{\thesection\arabic{equation}}
+        To start with the conclusion, we should firstly start with the comparisons of
 
 
-    \section{Detailed Balance Condition}\label{app:detailed_balance}
-    \vspace*{-3mm}
+        \section{Future Work}\label{sec:future_work}
+        \vspace*{-3mm}
 
-    In this section, as with the original paper (equations were taken from the original paper), we will prove the detailed balance condition
-    for the proposed approach.
+        This project was a great opportunity to understand the recent advancements in the field of Bayesian Structure
+        Learning. We have implemented the proposed approach in~\cite{deleu2022daggflownet} and conducted experiments to
+        evaluate the performance of the proposed approach. We have used synthetic datasets to evaluate the performance of
+        the proposed approach on graphs with different complexities and sizes. Numerous evaluation metrics were used to
+        evaluate the performance of this approach. However, due to the scale of this project, we could not further
+        explore the following directions and these could be suggestions for future work:
 
-    Suppose all states are complete states excpet the terminal state $s_f$. Denote $P_F$ and $P_B$ as the forward
-    and backward transition probabilities, respectively --- this is for simplifying the notation. The detailed balance
-    condition according to~\cite{bengio2023gflownetfoundations} (Def. 17) is given by:
-    \begin{equation}
-        F(s_t)P_F(s_{t+1} \mid s_t) = F(s_{t+1})P_B(s_t \mid s_{t+1})
-        \label{eq:detailed_balance_app}
-    \end{equation}
-    In the case where all the states are complete, we also know that (\cite{bengio2023gflownetfoundations} Def. 16):
-    \[
-        P_F(s_f \mid s_t) \coloneq \frac{F(s_t \to s_f)}{\sum_{s \in \text{Ch}(s_t)} F(s_t \to s)} = \frac{R(s_t)}{F(s_t)}
-        \LeftRightArrow F(s_t) = \frac{R(s_t)}{P_F(s_f \mid s_t)},
-    \]
-    where $F(s \to s')$ represents the flow from state $s$ to  $s'$. Replacing $F(.)$ in Eq.~\eqref{eq:detailed_balance_app}
-    yields:
-    \begin{equation}
-        R(s_t)P_F(s_{t+1} \mid s_t)P_F(s_f \mid s_{t+1}) = R(s_{t+1})P_B(s_t \mid s_{t+1})P_F(s_f \mid s_t).
-        \label{eq:detailed_balance_app2}
-    \end{equation}
-    This concludes the proof of the detailed balance condition.
+        \begin{itemize}
+            \item \textbf{Real-world Datasets:} In this project, we used synthetic datasets to evaluate the performance of
+            the proposed approach. However, it would be interesting to evaluate the performance of the proposed approach
+            on real-world datasets. This could give us a better understanding of the robustness of the proposed approach
+            in real-world scenarios.
+            \item \textbf{Comparison with other Approaches:} In this project, we have implemented the proposed approach
+            in~\cite{deleu2022daggflownet} and conducted experiments to evaluate the performance of the proposed approach.
+            However, it would be interesting to compare the performance of the proposed approach with other approaches in
+            the field of Bayesian Structure Learning.
+            \item \textbf{Hyperparameter Tuning:} In this project, we have used a set of hyperparameters for the
+            experiments. However, it would be interesting to conduct experiments with different hyperparameters to
+            evaluate the performance of the proposed approach with different hyperparameters.
+            \item And lastly, to our regret, we planned performing experiments on larger graphs included in
+            Table~\ref{tab:future_dataset}, however because of the limited time and resources we had in hand,
+            further exploration of these datasets was not possible.
+        \end{itemize}
 
-
-    \section{Masking Operation}\label{app:masking}
-    \vspace*{-3mm}
-
-    In this section we will explain the masking operation used in~\cite{deleu2022daggflownet} to enforce the acyclicity
-    constraint. Authors suggested an online update of the mask matrix to avoid unnecessary computation of this mask
-    from scratch for each graph.
-
-    Firstly, we should introduce \textit{Transitive Closure} and $G^T$ which is the transpose of the graph $G$.
-    Transpose of a directed graph $G$ is another directed graph on the same set of vertices with all of the edges
-    reversed. Denote this graph as $G^T$. Furthermore, the transitive closure of a directed graph $G$ is a graph
-    such that there is an edge from $i$ to $j$ in $T$ if and only if there is a directed path from $i$ to $j$ in
-    $G$. If we denote the adjacency matrix of $G$ as $A$, and Adjacency matrix of Transitive closure of $G^T$ as $T$,
-    then the mask matrix $m$ is defined as:
-    \[
-        m = A + T,
-    \]
-    where $+$ is the element-wise addition.
-    Each element of this matrix, if 0, indicates that an edge between the corresponding nodes is allowed, and if 1,
-    indicates that an edge between the corresponding nodes is not allowed. The intuition behind this operation is
-    that if an edge is in the original matrix, it cannot be added again (adjacency matrix part) and if there is a
-    directed path in the original matrix from $i$ to $j$ --- implying that there is an edge from $j$ to $i$ in the
-    transitive closure of the transposed graph --- we cannot add an edge from $j$ to $i$ (transitive closure part).
-    Note that the diagonal elements of the adjacency matrix which are corresponding to self-loops are set to 1 in $T$
-    by convention.
-
-    Suppose we have a graph $G_t$ and its respective mask $m_t$. This mask is made of two parts, Adjacency matrix of
-    the graph $A_t$ and transitive closure of $G_t^T$ denoted as $T_{t}$. For adding an edge $i$ to $j$ to the
-    graph (supposed this edge is allowed), the new adjacency matrix could be calculated easily. Now for $T_{t+1}$:
-    Take the column corresponding to index of $j$ in $T_t$ and the row corresponding to index of $i$ in $T_t$ and
-    perform outer product operation on $C_j$ and $R_i$ to get a new matrix $\hat{T}_{t+1}$. $T_{t+1}$ is then
-    calculated as $T_t + \hat{T}_{t+1}$.
-
-    The intuition behind this is: $C_j$ is the nodes that have a directed path to $j$ and $R_i$ is the nodes that
-    $i$ have a directed path to. The outer product operation will result in a matrix where the element $[a, b]$ is
-    non-zero if there is a directed path from $b$ to $a$ in the original matrix and thus, we cannot add an edge from
-    $a$ to $b$. Fig.~\ref{fig:masking} shows the masking operation for a simple graph, and you can follow these
-    explanations on this figure to better understand the operation.
-
-    \begin{figure}[h]
-        \centering
-        \includegraphics[width=0.92\textwidth]{figures/masking}
-        \caption{Masking operation for a simple graph. Figure is taken from the original paper~\cite{deleu2022daggflownet}.}
-        \label{fig:masking}
-    \end{figure}
+        \begin{table}[h]
+            \centering
+            \begin{tabular}{|l|c|c|c|}
+                \hline
+                \textbf{Dataset} & \textbf{Nodes} & \textbf{Average \# Edges} & \textbf{Data Size} \\
+                \hline
+                Dataset 3.1      & 15             & 45                        & 150                \\
+                Dataset 3.2      & ---            & ---                       & 250                \\
+                Dataset 3.3      & ---            & ---                       & 500                \\
+                \hline
+            \end{tabular}
+            \caption{Datasets that could be used for future work.}
+            \label{tab:future_dataset}
+        \end{table}
 
 
-    \section{Linear Attention Mechanism}\label{app:linear_attention}
-    \vspace*{-3mm}
+        \pagebreak
+        \newpage
+        \clearpage
+        \bibliographystyle{ieee_fullname}
+        \bibliography{references}
 
-    In this section, we will explain the linear attention mechanism used in the proposed approach. The linear attention
-    mechanism is a variant of the self-attention mechanism used in transformers. The self-attention mechanism is
-    computationally expensive as it scales quadratically with the input size. The linear attention mechanism on the
-    other hand, relies on the following equations:
-    \begin{equation}
-        Q = XW_Q, \quad K = XW_K, \quad V = XW_V, LinAttn_k(X) = \frac{\sum_{j=1}^{d^2}
-            \left(\phi(Q_k)^T\phi(K_j)\right)V_j}{\sum_{j=1}^{d^2} \phi(Q_k)^T\phi(K_j)},
-        \label{eq:linear_attention}
-    \end{equation}
+        \makeappendix
 
-    where $Q$, $K$, and $V$ are the query, key, and value matrices, respectively. $W_Q$, $W_K$, and $W_V$ are the
-    weight matrices for the query, key, and value, respectively. $\phi$ is a non-linear feature map, and $d$ is the
-    number of nodes in the graph.
+        \appendix
 
-    To better understand the linear characteristic of time complexity, suppose for on edge addition, we want to
-    perform the calculation. The time complexity is constant with respect to the size of the embedding space. Thus,
-    for $d^2$ edges, the time complexity is $O(d^2)$.
+        \counterwithin*{equation}{section}
+        \renewcommand\theequation{\thesection\arabic{equation}}
 
 
-    \section{Data Generation Process}\label{app:data_generation}
-    \vspace*{-3mm}
+        \section{Detailed Balance Condition}\label{app:detailed_balance}
+        \vspace*{-3mm}
 
-    The data Generation Process is mostly based on the original paper which itself is based on the work of~\cite{erdos1960evolutionrandomgraphs}.
-    The process is as follows:
+        In this section, as with the original paper (equations were taken from the original paper), we will prove the detailed balance condition
+        for the proposed approach.
 
-    \begin{enumerate}
-        \item Sample a DAG based on prior probability $P(G)$ that is based on the model present by~\cite{erdos1960evolutionrandomgraphs}.
-        This model is a modular prior function that considers the probability of existence of an edge between two
-        nodes independently. Generation of such graph is based on a bionomial distribution with expected value of $2e$
-        where $e$ is the number of edges. In the data generation process, we make sure that the graph is acyclic and
-        the expected number of edges in the final graph is $e$.
-
-        Firstly, we sample a $d \times d$ matrix $A$ where each element $A_{ij}$ is sampled from a Binomial
-        distribution with
+        Suppose all states are complete states excpet the terminal state $s_f$. Denote $P_F$ and $P_B$ as the forward
+        and backward transition probabilities, respectively --- this is for simplifying the notation. The detailed balance
+        condition according to~\cite{bengio2023gflownetfoundations} (Def. 17) is given by:
         \begin{equation}
-            p = \frac{2e}{d(d-1)}.
-            \label{eq:binomial}
+            F(s_t)P_F(s_{t+1} \mid s_t) = F(s_{t+1})P_B(s_t \mid s_{t+1})
+            \label{eq:detailed_balance_app}
         \end{equation}
-        Then, elements on and above diagonal are thrown away to make sure the adjacency matrix is lower-triangular.
-        This lower-triangular matrix is acyclic. Then, for relabeling purposes, rows and columns are permuted with
-        the same random permutation --- this is a common convention for relabeling a graph and does not change the
-        structure of the graph.
-        The expected number of edges in the final graph is $e$ because the expected number of edges in the sampled
-        matrix $A$ is $2e$ and we throw away half of the elements.
-
-        \item After acquireing a dag, we sample its parameters
-        based on a normal distribution with mean 0 and standard deviation 1. We also account for a noise term that
-        is considered to be zero in the experiments, thus, the equation of the graph would be:
+        In the case where all the states are complete, we also know that (\cite{bengio2023gflownetfoundations} Def. 16):
+        \[
+            P_F(s_f \mid s_t) \coloneq \frac{F(s_t \to s_f)}{\sum_{s \in \text{Ch}(s_t)} F(s_t \to s)} = \frac{R(s_t)}{F(s_t)}
+            \LeftRightArrow F(s_t) = \frac{R(s_t)}{P_F(s_f \mid s_t)},
+        \]
+        where $F(s \to s')$ represents the flow from state $s$ to  $s'$. Replacing $F(.)$ in Eq.~\eqref{eq:detailed_balance_app}
+        yields:
         \begin{equation}
-            X_j = \sum_{i \in \text{Pa}_G(X_j)} \theta_{ij}X_i + \epsilon_j,
-            \label{eq:graph}
+            R(s_t)P_F(s_{t+1} \mid s_t)P_F(s_f \mid s_{t+1}) = R(s_{t+1})P_B(s_t \mid s_{t+1})P_F(s_f \mid s_t).
+            \label{eq:detailed_balance_app2}
         \end{equation}
-        where $\theta_{ij} \sim \mathcal{N}(0, 1)$ and $\epsilon_j \sim \mathcal{N}(0, 0.01)$. Note that $X_j$ is the
-        mean of the normal distribution that the data for node $j$ is sampled from. The variance of this normal
-        distribution is considered to be 0.1 for all nodes.
-
-        \item Now that we have the graph and its parameters, we sample $\mathcal{D}$ using ancestral sampling.
-    \end{enumerate}
+        This concludes the proof of the detailed balance condition.
 
 
-    \section{Training Loop}\label{app:training_loop}
-    \vspace*{-3mm}
+        \section{Masking Operation}\label{app:masking}
+        \vspace*{-3mm}
 
-    In this section, we will explain the training loop used in the experiments. The training loop is based on the
-    training loop in the original paper. The training loop is depicted in Alg.~\ref{alg:training_loop}.
-    We start by initializing the environment, replay buffer, and model parameters.
-    During each iteration, actions are sampled based on the current policy and an exploration parameter ($\epsilon$
-    ), these actions are then executed in the environment, and the resulting transitions are stored in the replay
-    buffer. After a prefill
-    phase, batches of transitions are sampled from the buffer to update the model's parameters. The exploration
-    parameter is adjusted dynamically. Once training is complete, the posterior distribution of graphs is estimated,
-    this estimation is done using sampling from the learned distribution. Finally, evaluation results, and
-    vbvariables are saved to disk.
+        In this section we will explain the masking operation used in~\cite{deleu2022daggflownet} to enforce the acyclicity
+        constraint. Authors suggested an online update of the mask matrix to avoid unnecessary computation of this mask
+        from scratch for each graph.
 
+        Firstly, we should introduce \textit{Transitive Closure} and $G^T$ which is the transpose of the graph $G$.
+        Transpose of a directed graph $G$ is another directed graph on the same set of vertices with all of the edges
+        reversed. Denote this graph as $G^T$. Furthermore, the transitive closure of a directed graph $G$ is a graph
+        such that there is an edge from $i$ to $j$ in $T$ if and only if there is a directed path from $i$ to $j$ in
+        $G$. If we denote the adjacency matrix of $G$ as $A$, and Adjacency matrix of Transitive closure of $G^T$ as $T$,
+        then the mask matrix $m$ is defined as:
+        \[
+            m = A + T,
+        \]
+        where $+$ is the element-wise addition.
+        Each element of this matrix, if 0, indicates that an edge between the corresponding nodes is allowed, and if 1,
+        indicates that an edge between the corresponding nodes is not allowed. The intuition behind this operation is
+        that if an edge is in the original matrix, it cannot be added again (adjacency matrix part) and if there is a
+        directed path in the original matrix from $i$ to $j$ --- implying that there is an edge from $j$ to $i$ in the
+        transitive closure of the transposed graph --- we cannot add an edge from $j$ to $i$ (transitive closure part).
+        Note that the diagonal elements of the adjacency matrix which are corresponding to self-loops are set to 1 in $T$
+        by convention.
 
-    \begin{algorithm}[H]
-        \caption{Training Loop for DAG-GFlowNet}
-        \begin{algorithmic}[1]
-            \Require Environment and GFlowNet initialized with parameters
-            \Require Replay buffer initialized with capacity
-            \Require Exploration schedule $\epsilon$ defined
-            \State Initialize random seed and keys
-            \State Reset environment to obtain initial observations
+        Suppose we have a graph $G_t$ and its respective mask $m_t$. This mask is made of two parts, Adjacency matrix of
+        the graph $A_t$ and transitive closure of $G_t^T$ denoted as $T_{t}$. For adding an edge $i$ to $j$ to the
+        graph (supposed this edge is allowed), the new adjacency matrix could be calculated easily. Now for $T_{t+1}$:
+        Take the column corresponding to index of $j$ in $T_t$ and the row corresponding to index of $i$ in $T_t$ and
+        perform outer product operation on $C_j$ and $R_i$ to get a new matrix $\hat{T}_{t+1}$. $T_{t+1}$ is then
+        calculated as $T_t + \hat{T}_{t+1}$.
 
-            \For{iteration $= 1$ to \texttt{prefill} + \texttt{num\_iterations}}
-                \State \textbf{Sample actions:} Compute actions using policy with exploration parameter $\epsilon$
-                \State \textbf{Execute actions:} Perform actions in the environment to obtain:
-                \begin{itemize}
-                    \item Next observations
-                    \item Delta scores
-                    \item Termination flags (\texttt{dones})
-                \end{itemize}
-                \State \textbf{Update Replay Buffer:} Store transitions (observations, actions, next observations, rewards, and dones) in the buffer
-                \State Update observations with next observations
+        The intuition behind this is: $C_j$ is the nodes that have a directed path to $j$ and $R_i$ is the nodes that
+        $i$ have a directed path to. The outer product operation will result in a matrix where the element $[a, b]$ is
+        non-zero if there is a directed path from $b$ to $a$ in the original matrix and thus, we cannot add an edge from
+        $a$ to $b$. Fig.~\ref{fig:masking} shows the masking operation for a simple graph, and you can follow these
+        explanations on this figure to better understand the operation.
 
-                \If{iteration $\geq$ \texttt{prefill}}
-                    \State \textbf{Sample Batch:} Randomly sample a batch from the replay buffer
-                    \State \textbf{Update Parameters:} Perform one optimization step using sampled batch
-                \EndIf
-
-                \State Update $\epsilon$ using exploration schedule
-                \State Log progress (loss, exploration rate, etc.)
-            \EndFor
-
-            \State \textbf{Posterior Estimate:} Compute posterior distribution of graphs using the trained GFlowNet
-            \State \textbf{Compute Metrics:} Evaluate the expected SHD, expected edges, and other threshold-based metrics
-            \State \textbf{Save Results:} Store the model, replay buffer, posterior samples, and evaluation metrics to disk
-        \end{algorithmic}\label{alg:training_loop}
-    \end{algorithm}
-
-    \subsection{Reinforcement Learning Concepts}\label{app:rl_concepts}
-    \vspace*{-3mm}
+        \begin{figure}[h]
+            \centering
+            \includegraphics[width=0.92\textwidth]{figures/masking}
+            \caption{Masking operation for a simple graph. Figure is taken from the original paper~\cite{deleu2022daggflownet}.}
+            \label{fig:masking}
+        \end{figure}
 
 
-    In reinforcement learning (RL), the \textbf{environment} represents the external system or task that the agent
-    interacts with to learn a policy. The environment provides the agent with:
-    \begin{itemize}
-        \item \textbf{State:} A representation of the current status or configuration of the system.
-        \item \textbf{Action space:} The set of possible actions the agent can take to influence the environment.
-        \item \textbf{Transition dynamics:} Rules governing how the environment evolves in response to the agent's actions.
-        \item \textbf{Reward signal:} Feedback used by the agent to evaluate the effectiveness of its actions and guide future decisions.
-    \end{itemize}
+        \section{Linear Attention Mechanism}\label{app:linear_attention}
+        \vspace*{-3mm}
+
+        In this section, we will explain the linear attention mechanism used in the proposed approach. The linear attention
+        mechanism is a variant of the self-attention mechanism used in transformers. The self-attention mechanism is
+        computationally expensive as it scales quadratically with the input size. The linear attention mechanism on the
+        other hand, relies on the following equations:
+        \begin{equation}
+            Q = XW_Q, \quad K = XW_K, \quad V = XW_V, LinAttn_k(X) = \frac{\sum_{j=1}^{d^2}
+                \left(\phi(Q_k)^T\phi(K_j)\right)V_j}{\sum_{j=1}^{d^2} \phi(Q_k)^T\phi(K_j)},
+            \label{eq:linear_attention}
+        \end{equation}
+
+        where $Q$, $K$, and $V$ are the query, key, and value matrices, respectively. $W_Q$, $W_K$, and $W_V$ are the
+        weight matrices for the query, key, and value, respectively. $\phi$ is a non-linear feature map, and $d$ is the
+        number of nodes in the graph.
+
+        To better understand the linear characteristic of time complexity, suppose for on edge addition, we want to
+        perform the calculation. The time complexity is constant with respect to the size of the embedding space. Thus,
+        for $d^2$ edges, the time complexity is $O(d^2)$.
 
 
-    In this work, the environment is designed to model the structure learning problem as a graph generation task. It
-    provides observations representing partial or complete graph structures, accepts actions that modify the graph (
-    e.g., adding or removing edges), and computes rewards based on changes in the graph's score. This setup enables the
-    GFlowNet agent to explore and learn graph structures that maximize the overall objective, aligning RL principles
-    with the requirements of structure learning.
+        \section{Data Generation Process}\label{app:data_generation}
+        \vspace*{-3mm}
+
+        The data Generation Process is mostly based on the original paper which itself is based on the work of~\cite{erdos1960evolutionrandomgraphs}.
+        The process is as follows:
+
+        \begin{enumerate}
+            \item Sample a DAG based on prior probability $P(G)$ that is based on the model present by~\cite{erdos1960evolutionrandomgraphs}.
+            This model is a modular prior function that considers the probability of existence of an edge between two
+            nodes independently. Generation of such graph is based on a bionomial distribution with expected value of $2e$
+            where $e$ is the number of edges. In the data generation process, we make sure that the graph is acyclic and
+            the expected number of edges in the final graph is $e$.
+
+            Firstly, we sample a $d \times d$ matrix $A$ where each element $A_{ij}$ is sampled from a Binomial
+            distribution with
+            \begin{equation}
+                p = \frac{2e}{d(d-1)}.
+                \label{eq:binomial}
+            \end{equation}
+            Then, elements on and above diagonal are thrown away to make sure the adjacency matrix is lower-triangular.
+            This lower-triangular matrix is acyclic. Then, for relabeling purposes, rows and columns are permuted with
+            the same random permutation --- this is a common convention for relabeling a graph and does not change the
+            structure of the graph.
+            The expected number of edges in the final graph is $e$ because the expected number of edges in the sampled
+            matrix $A$ is $2e$ and we throw away half of the elements.
+
+            \item After acquireing a dag, we sample its parameters
+            based on a normal distribution with mean 0 and standard deviation 1. We also account for a noise term that
+            is considered to be zero in the experiments, thus, the equation of the graph would be:
+            \begin{equation}
+                X_j = \sum_{i \in \text{Pa}_G(X_j)} \theta_{ij}X_i + \epsilon_j,
+                \label{eq:graph}
+            \end{equation}
+            where $\theta_{ij} \sim \mathcal{N}(0, 1)$ and $\epsilon_j \sim \mathcal{N}(0, 0.01)$. Note that $X_j$ is the
+            mean of the normal distribution that the data for node $j$ is sampled from. The variance of this normal
+            distribution is considered to be 0.1 for all nodes.
+
+            \item Now that we have the graph and its parameters, we sample $\mathcal{D}$ using ancestral sampling.
+        \end{enumerate}
+
+
+        \section{Training Loop}\label{app:training_loop}
+        \vspace*{-3mm}
+
+        In this section, we will explain the training loop used in the experiments. The training loop is based on the
+        training loop in the original paper. The training loop is depicted in Alg.~\ref{alg:training_loop}.
+        We start by initializing the environment, replay buffer, and model parameters.
+        During each iteration, actions are sampled based on the current policy and an exploration parameter ($\epsilon$
+        ), these actions are then executed in the environment, and the resulting transitions are stored in the replay
+        buffer. After a prefill
+        phase, batches of transitions are sampled from the buffer to update the model's parameters. The exploration
+        parameter is adjusted dynamically. Once training is complete, the posterior distribution of graphs is estimated,
+        this estimation is done using sampling from the learned distribution. Finally, evaluation results, and
+        vbvariables are saved to disk.
+
+
+        \begin{algorithm}[H]
+            \caption{Training Loop for DAG-GFlowNet}
+            \begin{algorithmic}[1]
+                \Require Environment and GFlowNet initialized with parameters
+                \Require Replay buffer initialized with capacity
+                \Require Exploration schedule $\epsilon$ defined
+                \State Initialize random seed and keys
+                \State Reset environment to obtain initial observations
+
+                \For{iteration $= 1$ to \texttt{prefill} + \texttt{num\_iterations}}
+                    \State \textbf{Sample actions:} Compute actions using policy with exploration parameter $\epsilon$
+                    \State \textbf{Execute actions:} Perform actions in the environment to obtain:
+                    \begin{itemize}
+                        \item Next observations
+                        \item Delta scores
+                        \item Termination flags (\texttt{dones})
+                    \end{itemize}
+                    \State \textbf{Update Replay Buffer:} Store transitions (observations, actions, next observations, rewards, and dones) in the buffer
+                    \State Update observations with next observations
+
+                    \If{iteration $\geq$ \texttt{prefill}}
+                        \State \textbf{Sample Batch:} Randomly sample a batch from the replay buffer
+                        \State \textbf{Update Parameters:} Perform one optimization step using sampled batch
+                    \EndIf
+
+                    \State Update $\epsilon$ using exploration schedule
+                    \State Log progress (loss, exploration rate, etc.)
+                \EndFor
+
+                \State \textbf{Posterior Estimate:} Compute posterior distribution of graphs using the trained GFlowNet
+                \State \textbf{Compute Metrics:} Evaluate the expected SHD, expected edges, and other threshold-based metrics
+                \State \textbf{Save Results:} Store the model, replay buffer, posterior samples, and evaluation metrics to disk
+            \end{algorithmic}\label{alg:training_loop}
+        \end{algorithm}
+
+        \subsection{Reinforcement Learning Concepts}\label{app:rl_concepts}
+        \vspace*{-3mm}
+
+
+        In reinforcement learning (RL), the \textbf{environment} represents the external system or task that the agent
+        interacts with to learn a policy. The environment provides the agent with:
+        \begin{itemize}
+            \item \textbf{State:} A representation of the current status or configuration of the system.
+            \item \textbf{Action space:} The set of possible actions the agent can take to influence the environment.
+            \item \textbf{Transition dynamics:} Rules governing how the environment evolves in response to the agent's actions.
+            \item \textbf{Reward signal:} Feedback used by the agent to evaluate the effectiveness of its actions and guide future decisions.
+        \end{itemize}
+
+
+        In this work, the environment is designed to model the structure learning problem as a graph generation task. It
+        provides observations representing partial or complete graph structures, accepts actions that modify the graph (
+        e.g., adding or removing edges), and computes rewards based on changes in the graph's score. This setup enables the
+        GFlowNet agent to explore and learn graph structures that maximize the overall objective, aligning RL principles
+        with the requirements of structure learning.
 
 
 %\begin{thebibliography}{99}
 %\end{thebibliography}
 
-\end{document}
+    \end{document}
