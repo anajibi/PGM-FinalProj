@@ -10,8 +10,6 @@
 
 \usepackage{epsfig}
 \usepackage{graphicx}
-\usepackage{amsmath}
-\usepackage{amssymb}
 \usepackage{booktabs}
 \usepackage{multirow}
 \usepackage{pifont}
@@ -129,8 +127,8 @@
     to describe the main concepts and algorithms used in this project in Section~\ref{sec:background}. In Section~\ref{sec:proposed_approach},
     we describe the proposed approach for learning the structure of a DAG using generative flow networks in the
     original paper~\cite{deleu2022daggflownet}. Later we will describe and comprehensively explain the experiments
-    conducted in this project in Section~\ref{sec:experiments}. Section~\ref{sec:results} will present the results of the
-    experiments and discuss the findings. Finally, we will conclude the report in Section~\ref{sec:conclusion}
+    conducted in this project in Section~\ref{sec:experiments} along with the results of the
+    experiments. Finally, we will conclude the report in Section~\ref{sec:conclusion}
     followed by Section~\ref{sec:future_work} where we will discuss the future work.
 
 
@@ -145,7 +143,7 @@
     The process of learning a posterior distribution $P(G|D)$ is computationally intensive; thus, the first idea that
     comes to mind is to sample from this distribution instead of completely learning it. Markov Chain Monte Carlo (MCMC)
     is the most effective and widely used method for sampling method. MCMC methods are based on the idea of constructing
-    a Markov chain that has the desired distribution as its stationary distribution. Multiple approaches \cite{
+    a Markov chain that has the desired distribution as its stationary distribution. Multiple approaches~\cite{
         mcmc1, mcmc2, mcmc3} have been proposed to sample from the posterior distribution of the DAG given the data.
     However, these methods are computationally expensive and often face limitations such as slow convergence and
     computational inefficiencies. Recently in~\cite{viinikka2020scalablebayesianlearningcausal}, Viinikka et al. proposed a scalable approach towards
@@ -202,16 +200,14 @@
     If the flow-matching condition~\eqref{eq:flow_matching} is satisfied, GFlowNet induces a generative process to
     sample complete states $s \in \mathcal{X}$ with probability proportional to the reward function $R(s)$. In other
     words, starting from the initial state $s_0$, the generative process will traverse the DAG of states, sampling
-    each state $s_i$ using the transition probabilities defined as normalized outgoing flows consistent with~
-    \eqref{eq:flow_prob}.
+    each state $s_i$ using the transition probabilities defined as normalized outgoing flows consistent with~\eqref{eq:flow_prob}.
 
     \begin{equation}
         P(s_{i+1} \mid s_i) \propto F(s_i \to s_{i+1}),
         \label{eq:flow_prob}
     \end{equation}
 
-    This process, will result in a sample $s$ with probability $P(s) \propto R(s)$. In other words, consider~
-    \eqref{eq:flow_matching} equation, there are two explanations for a high reward $R(s)$: either the flow from the parent
+    This process, will result in a sample $s$ with probability $P(s) \propto R(s)$. In other words, consider~\eqref{eq:flow_matching} equation, there are two explanations for a high reward $R(s)$: either the flow from the parent
     states is high or the flow to the child states is low. This is the key idea behind GFlowNets.
 
 
@@ -222,7 +218,7 @@
     Such difference in flow values makes it difficult to parametrize $F$. Authors used proposed alternative by Bengio
     et al. in~\cite{bengio2023gflownetfoundations} to address this issue. This approach suggests parametrization of
     forward and backward transition probabilities $P_{\phi}(s_{i+1} \mid s_i)$ and $P_{\psi}(s_i \mid s_{i+1})$ such
-    that the flow-matching condition is satisfied through eq.~\eqref{eq:detailed_balance}.
+    that the flow-matching condition is satisfied through Eq.~\eqref{eq:detailed_balance}.
 
     This equation --- proof could be seen in Appendix~\ref{app:detailed_balance} --- holds in the case that all states of the GFlowNet are
     complete (except the terminal state $s_f$). Moreover, $P_{\phi}(s_{i+1} \mid s_i)$ is an encoding of the forward
@@ -250,7 +246,7 @@
     To further elaborate this notion, first, let's take a look at Fig.~\ref{fig:dag_gflownet}. This figure shows the
     overall generation process of a DAG using GFlowNet. The process starts from an initial state $G_0$ and moves
     forward, according to the transition probabilities, $P_{\phi}(G_{i+1} \mid G_i)$ until it reaches the absorbing state
-    $s_f$. Note that since in eq.~\eqref{eq:detailed_balance} we assumed that all states are complete except the
+    $s_f$. Note that since in Eq.~\eqref{eq:detailed_balance} we assumed that all states are complete except the
     absorbing state, all states of the inner DAG of GFlowNet should be valid DAGs (except the absorbing state).
     At each step, moving from $G_i$ to $G_{i+1}$, we add an edge to the DAG considering the acyclicity constraint.
     The aciclicity constraint is enforced using some masking operation on the adjacency matrix of the DAG which is
@@ -291,9 +287,9 @@
     (2) transform a set of input edges into a set of output probabilities for each edge to be added, and (3) bounded
     parameters despite the unbounded nature of the input, specifically $d$ --- the number of nodes in the graph.
 
-    One choice to satisfy these requirements would be to use transformers~\cite{vaswani2017attention}, however,
+    One choice to satisfy these requirements would be to use transformers~\cite{vaswani2023attentionneed}, however,
     because of the size of the input, $d^2$, the self-attention layers would scale up to $O(d^4)$, which makes it
-    interactable for large graphs. Instead, authors used a Linear Transformer~\cite{katharopoulos2020transformers}.
+    interactable for large graphs. Instead, authors used a Linear Transformer~\cite{katharopoulos2020transformersrnnsfastautoregressive}.
     Detailed explanation of linear attention mechanism could be found in Appendix~\ref{app:linear_attention}.
 
     This concludes us to the architecture of the neural network used in the proposed approach. Fig.~\ref{fig:nn_architecture}
@@ -315,7 +311,7 @@
 
     \textbf{The loss function} Now that we have defined the overall architecture of the neural network and the
     transition probabilities, we need to define the loss function to train the network.
-    To satisfy eq.~\eqref{eq:detailed_balance}, authors suggested using the following loss function:
+    To satisfy Eq.~\eqref{eq:detailed_balance}, authors suggested using the following loss function:
     \begin{equation}
         \begin{array}{l}
             \mathcal{L}(\phi) = \\
@@ -334,7 +330,8 @@
     fully observed sample from the target distribution. The goal is to obtain a posterior distribution
     $P(G|\mathcal{D})$.
     As mentioned before, GFlowNet models a distribution $P(s) \propto R(s)$, now if we define the reward function $R(s)$
-    according to eq.~\eqref{eq:reward_function}, we can model the posterior distribution $P(G|\mathcal{D})$ using GFlowNet.
+    according to Eq.~\eqref{eq:reward_function}, we can model the posterior distribution $P(G|\mathcal{D})$ using
+    GFlowNet.
     \begin{equation}
         R(s) = P(G|D) = P(G)P(D|G) = P(G) P(\theta|G) P(D|\theta, G)
         \label{eq:reward_function}
@@ -343,8 +340,8 @@
 
     The authors tried to make the reward function modular and thus, computationally efficient. They assumed that both the
     prior $P(G)$ and the prior over the parameters $P(\theta|G)$ are modular, thus, choosing a modular likelihood
-    function can result in a modular reward function. BGe score~\cite{scutari2009bayesiannetworks} and
-    BDe score~\cite{heckerman1995learningbayesiannetworks} are two examples of modular likelihood functions that
+    function can result in a modular reward function. BGe score~\cite{geiger2021learninggaussiannetworks} and
+    BDe score~\cite{heckerman2015learningbayesiannetworkscombination} are two examples of modular likelihood functions that
     were used by the authors in their experiments.
 
     Considering modularity we have:
@@ -353,7 +350,7 @@
         \label{eq:modular_reward}
     \end{equation}
 
-    This will yield eq.~\eqref{eq:log_diff} for adding edge $X_i \to X_j$ to the graph $G$ resulting in graph $G'$.
+    This will yield Eq.~\eqref{eq:log_diff} for adding edge $X_i \to X_j$ to the graph $G$ resulting in graph $G'$.
 
     \begin{equation}
         \begin{aligned}
@@ -400,7 +397,7 @@
             \State Fill the buffer $\mathcal{B}$ with some initial transitions along with their delta scores.
             \While{not converged}
                 \State Sample a batch of transitions from $\mathcal{B}$.
-                \State Compute the loss function $\mathcal{L}(\phi)$ using eq.~\eqref{eq:log_diff} and eq.~\eqref{eq:off_policy_loss}.
+                \State Compute the loss function $\mathcal{L}(\phi)$ using Eq.~\eqref{eq:log_diff} and Eq.~\eqref{eq:off_policy_loss}.
                 \State Update the neural network parameters $\phi$ using the gradients of $\mathcal{L}(\phi)$.
             \EndWhile
         \end{algorithmic}
@@ -428,7 +425,7 @@
             \hline
             \textbf{Dataset} & \textbf{Nodes} & \textbf{Average # Edges} & \textbf{Data Size} \\
             \hline
-            Dataset 1.1      & 5              & 10                        & 30                 \\
+            Dataset 1.1      & 5              & 10                       & 30                 \\
             Dataset 1.2      & ---            & ---                      & 50                 \\
             \hline
             Dataset 2.1.1    & 10             & 20                       & 150                \\
@@ -437,10 +434,10 @@
             \hline
             Dataset 2.2.1    & ---            & 30                       & 100                \\
             Dataset 2.2.2    & ---            & ---                      & 200                \\
-            \hline
-            Dataset 3.1      & 15             & 45                       & 150                \\
-            Dataset 3.2      & ---            & ---                      & 250                \\
-            Dataset 3.3      & ---            & ---                      & 500                \\
+%            \hline
+%            Dataset 3.1      & 15             & 45                       & 150                \\
+%            Dataset 3.2      & ---            & ---                      & 250                \\
+%            Dataset 3.3      & ---            & ---                      & 500                \\
 
             \hline
         \end{tabular}
@@ -462,8 +459,6 @@
             \item Dataset 2.2 considers the effect of data size on a more complex graph with the same number of
             nodes as Dataset 2.1 but with a higher number of edges.
         \end{itemize}
-        \item Lastly, we evaluate the performance of the proposed approach on a large graph with varying data size in
-        Dataset 3.
     \end{itemize}
 
     Data generation process and graph generation process for these datasets is explained in details in Appendix~\ref{app:data_generation}.
@@ -481,15 +476,50 @@
     datasets to evaluate the performance of the proposed approach.
 
     \vspace*{3mm}
-    \textbf{Ancestor Relationship} is another metric that measures the percentage of edges that are correctly
-    predicted to be in the same direction as the ground truth DAG. This metric is calculated as the ratio of the
-    number of correct edges to the total number of edges in the graph.
+    \textbf{AUROC (Area Under the ROC Curve):}
+    \begin{itemize}
+        \item The ROC curve plots the \textit{True Positive Rate (TPR)} (Sensitivity) against the \textit{False Positive Rate (FPR)} at different threshold levels.
+        \item The AUROC value represents the probability that a randomly chosen positive instance is ranked higher than a randomly chosen negative instance.
+        \item In the context of graph comparisons, AUROC evaluates how well the predicted graph structure ($P(G|D)$) distinguishes between edges that exist (positive) and those that do not (negative) in the ground truth.
+        \item It works well when there is a balanced class distribution between edges and non-edges.
+    \end{itemize}
+    This metric was used as is in the original paper~\cite{deleu2022daggflownet}.
+
+
+    \vspace*{3mm}
+    \textbf{AUPRC (Area Under the Precision-Recall Curve):}
+    \begin{itemize}
+        \item The Precision-Recall curve plots \textit{Precision} ($\text{TP} / (\text{TP} + \text{FP})$) against \textit{Recall} ($\text{TP} / (\text{TP} + \text{FN})$) at different threshold levels.
+        \item The AUPRC value focuses on the performance for the positive class (edges in the graph) and summarizes the trade-off between precision and recall.
+        \item In graph comparisons, AUPRC is useful for cases where the presence of edges is sparse compared to non-edges (a common scenario in graph datasets).
+        \item AUPRC highlights the performance on the positive class, making it more suitable for imbalanced datasets.
+    \end{itemize}
+    This metric was used as is in the original paper~\cite{deleu2022daggflownet}.
+
 
     \vspace*{3mm}
     \textbf{BGe Score} is a metric that measures the likelihood of the data given the learned DAG. To have a
     quantitative measure of how close the learned DAG is to the ground truth DAG, we will calculate the BGe score
     for a number of sampled DAGs from the learned distribution and compare the BGe score of the ground truth DAG with
     the learned DAGs.
+
+    The depiction used for this metric is an original work that was developed during this project. To better
+    understand this metric, we will break it down and break down the process as well.
+
+    The goal from this metric is to compare the posterior distribution acquired by DAG-GFlowNet and to compare this
+    posterior in terms of BGe score. To achieve that, we want to acquire a distribution for BGe score of the graphs
+    sampled from this distribution.
+
+    To that end, firstly, we sampled a number of graphs --- 1000 graphs in our case --- from the learned posterior
+    distribution. Calculating the BGe score for each of these graphs, we have a distribution of BGe scores. Having
+    the fact in mind that graphs that are from the same Markov Equivalence Class (MEC) have the same BGe score, we
+    decided to cluster these graphs based on their BGe score.
+
+    This clustering was done using K-means clustering algorithm with different $K$ values. Lastly, we concluded that
+    $K=15$ is a good number of clusters --- this was done qualitatively observing the final depictions. We then
+    sketched the cluster centroids with different sizes based on the number of graphs in each cluster. This
+    visualization helped us to understand the distribution of the BGe scores of the graphs sampled from the learned
+    distribution.
 
     \vspace*{3mm}
     \textbf{$P(D' \mid D)$} To quantify the quality of the learned distribution in sampling consistent DAGs with the
@@ -505,21 +535,256 @@
         P(D' \mid D) \approx \frac{1}{N} \sum_{i=1}^{N} P(D' \mid G_i, D)
         \label{eq:approx_likelihood}
     \end{equation}
-    where $G_i$ is a sampled DAG from the learned distribution.
+    where $G_i$ is a sampled DAG from the learned distribution. Note that the side of the held-out dataset $D'$ is
+    tof the same size as the original dataset $D$.
 
     \subsection{Experimental Setup}\label{sec:experimental_setup}
     \vspace*{-3mm}
 
+    In this section, we will describe the experimental setup used in the experiments. We will describe the
+    hyperparameters used in the experiments and the training process. A complete explanation of the training loop is
+    included in~\ref{app:training_loop}. Note that because of the complexities of the implementation of
+    DAG-GFlowNet, we decided to use the implementation provided by the authors of the original paper~\cite{deleu2022daggflownet} and further develop and modify it to suit our needs.
+
+    All of these experiments were conducted on \textit{Kaggle} platform using a \textit{TPU VM v3-8} instance. The
+    experiments were conducted using \textit{JAX} library~\cite{jax2018github} for the neural network implementation
+    and \textit{Optax} library~\cite{deepmind2020jax} for the optimization process. The code for the experiments
+    could be found attached to this report.
+
+    To start with, Table~\ref{tab:db_hyperparameters} shows the hyperparameters used in the experiments for each
+    dataset. Furthermore, Table~\ref{tab:shrd_hyperparameters} includes shared hyperparameters used in the
+    experiments. In Table~\ref{tab:shrd_hyperparameters}, \textit{Prior Dist.} refers to the prior distribution
+    $P(G)$ used in the experiments according to Eq.~\eqref{eq:reward_function}.
+
+    \begin{table}[h]
+        \centering
+        \begin{tabular}{|l|c|c|}
+            \hline
+            \textbf{Dataset} & \textbf{Prefill Buffer} & \textbf{# Iterations} & \textbf{Experiment Count} \\
+            \hline
+            Dataset 1.1-.2   & 500                     & 50,000                & 5                         \\
+            Dataset 2.1.1-.3 & 1000                    & 100,000               & 2                         \\
+            Dataset 2.2.1-.2 & 1000                    & 100,000               & 2                         \\
+%            Dataset 3.1-.3   & 2000                    & 200,000               & 1                         \\
+            \hline
+        \end{tabular}
+        \caption{Hyperparameters used in the experiments for each dataset.}
+        \label{tab:db_hyperparameters}
+    \end{table}
+
+    \begin{table}[h]
+        \centering
+        \begin{tabular}{|l|c|}
+            \hline
+            \textbf{Hyperparameter}  & \textbf{Value} \\
+            \hline
+            Learning Rate            & $1e-5$         \\
+            Huber Loss delta         & 1.0            \\
+            Batch Size               & 32             \\
+            Num Envs\footnotemark[1] & 32             \\
+            Buffer Size              & 100,000        \\
+            Prior Dist.              & Uniform        \\
+            Exploration Max Val      & 0.9            \\
+            \hline
+        \end{tabular}
+        \caption{Shared hyperparameters used in the experiments.}
+        \label{tab:shrd_hyperparameters}
+    \end{table}
+
+    \footnotetext[1]{Number of environments is a RL term that refers to the number of parallel environments with
+    the same parameters that the agent is exploring. This number allows us to collect more data and converge
+    faster. We explained this concept in details in Appendix~\ref{app:rl_concepts}.}
+
+    \subsection{Results}\label{subsec:results}
+    \vspace*{-3mm}
+
+    This section includes results acquired from explained experiments in the previous sections. We will start with
+    BGe score and held-out likelihood results and then continue with the E-SHD and AUROC and AUPRC results. % TODO
+
+    \subsubsection{BGe Score and Held-out Likelihood}
+    \vspace*{-3mm}
+
+    Fig.~\ref{fig:illustration_5_8} shows the BGe score and held-out likelihood results for Dataset 1.1 and Dataset 1.2.
+    This figure could represent a good comparison between the performance of the proposed approach for different
+    sized of $\mathcal{D}$. At each figure, the x-axis represents the experiment and the y-axis represents the metric
+    under discussion. Fig.~\ref{fig:illustration_10_15} has the same
+    interpretation as Fig.~\ref{fig:illustration_5_8}.
+
+    % figure with 2 subfigures and two lines
+    \begin{figure*}[h]
+        \centering
+        \begin{subfigure}
+            \centering
+            \includegraphics[width=0.48\textwidth]{figures/BGe_5_8_30}
+            \label{fig:bge_score_5_8_30}
+        \end{subfigure}
+        \begin{subfigure}
+            \centering
+            \includegraphics[width=0.48\textwidth]{figures/BGe_5_8_50}
+            \label{fig:bge_score_5_8_50}
+        \end{subfigure}
+        \hfill
+        \begin{subfigure}
+            \centering
+            \includegraphics[width=0.48\textwidth]{figures/P_d_prime_5_8_30}
+            \label{fig:p_d_5_8_30}
+        \end{subfigure}
+        \begin{subfigure}
+            \centering
+            \includegraphics[width=0.48\textwidth]{figures/P_d_prime_5_8_50}
+            \label{fig:p_d_5_8_50}
+        \end{subfigure}
+        \caption{BGe score distribution and held-out likelihood results for Dataset 1.1 and Dataset 1.2. For Fig.~\ref{
+            fig:bge_score_5_8_30, fig:bge_score_5_8_50}, the x-axis represents the experiment and the y-axis
+        represents the BGe score distribution. For Fig.~\ref{fig:p_d_5_8_30, fig:p_d_5_8_50}, the x-axis
+        represents the experiment and the y-axis represents the held-out likelihood.}
+        \label{fig:illustration_5_8}
+    \end{figure*}
+
+    \begin{figure*}[h]
+        \centering
+        \begin{subfigure}
+            \centering
+            \includegraphics[width=0.32\textwidth]{figures/BGe_10_15_80}
+            \label{fig:bge_score_10_15_80}
+        \end{subfigure}
+        \begin{subfigure}
+            \centering
+            \includegraphics[width=0.32\textwidth]{figures/BGe_10_15_150}
+            \label{fig:bge_score_10_15_150}
+        \end{subfigure}
+        \begin{subfigure}
+            \centering
+            \includegraphics[width=0.32\textwidth]{figures/BGe_10_15_250}
+            \label{fig:bge_score_10_15_250}
+        \end{subfigure}
+        \hfill
+        \begin{subfigure}
+            \centering
+            \includegraphics[width=0.32\textwidth]{figures/P_d_prime_10_15_80}
+            \label{fig:p_d_10_15_80}
+        \end{subfigure}
+        \begin{subfigure}
+            \centering
+            \includegraphics[width=0.32\textwidth]{figures/P_d_prime_10_15_150}
+            \label{fig:p_d_10_15_150}
+        \end{subfigure}
+        \begin{subfigure}
+            \centering
+            \includegraphics[width=0.32\textwidth]{figures/P_d_prime_10_15_250}
+            \label{fig:p_d_10_15_250}
+        \end{subfigure}
+        \caption{BGe score distribution and held-out likelihood for Dataset 2.1.1 (Fig.~\ref{fig:bge_score_10_15_80,
+            fig:p_d_10_15_80}), Dataset 2.1.2 (Fig.~\ref{fig:bge_score_10_15_150, fig:p_d_10_15_150}), and Dataset
+        2.1.3 (Fig.~\ref{fig:bge_score_10_15_250, fig:p_d_10_15_250}).}
+        \label{fig:illustration_10_15}
+    \end{figure*}
+
+%    \begin{figure}[h]
+%        \centering
+%        \begin{subfigure}
+%            \centering
+%            \includegraphics[width=0.48\textwidth]{figures/BGe_15_30_150}
+%            \label{fig:bge_score_15_30_150}
+%        \end{subfigure}
+%        \begin{subfigure}
+%            \centering
+%            \includegraphics[width=0.48\textwidth]{figures/BGe_15_30_250}
+%            \label{fig:bge_score_15_30_250}
+%        \end{subfigure}
+%        \hfill
+%        \begin{subfigure}
+%            \centering
+%            \includegraphics[width=0.48\textwidth]{figures/P_d_prime_15_30_150}
+%            \label{fig:p_d_15_30_150}
+%        \end{subfigure}
+%        \begin{subfigure}
+%            \centering
+%            \includegraphics[width=0.48\textwidth]{figures/P_d_prime_15_30_250}
+%            \label{fig:p_d_15_30_250}
+%        \end{subfigure}
+%        \caption{BGe score distribution and held-out likelihood for Dataset 2.2.1 (Fig.~
+%        \ref{fig:bge_score_15_30_150,
+%        fig:p_d_15_30_150}) and Dataset 2.2.2 (Fig.~\ref{fig:bge_score_15_30_250, fig:p_d_15_30_250}).}
+%        \label{fig:illustration_15_30}
+%    \end{figure}
+
+    \subsubsection{E-SHD and AUROC and AUPRC}
+
+    Since the number of experiments for Dataset 2 is small we will include the results for these metrics in a
+    table instead of plots. However, for Dataset 1, Fig.~\ref{fig:metrics_dataset_1} shows the results for E-SHD, AUROC,
+    and AUPRC metrics. The x-axis represents the dataset size and the y-axis represents the metric under discussion.
+
+    \begin{figure*}[h]
+        \centering
+        \begin{subfigure}
+            \centering
+            \includegraphics[width=0.32\textwidth]{figures/expected_0_5_8}
+            \label{fig:eshd_5_8}
+        \end{subfigure}
+        \begin{subfigure}
+            \centering
+            \includegraphics[width=0.32\textwidth]{figures/auroc_5_8}
+            \label{fig:auroc_5_8}
+        \end{subfigure}
+        \begin{subfigure}
+            \centering
+            \includegraphics[width=0.32\textwidth]{figures/auprc_5_8}
+            \label{fig:auprc_5_8}
+        \end{subfigure}
+        \caption{E-SHD, AUROC, and AUPRC results for Dataset 1.1 and Dataset 1.2. Fig.~\ref{fig:eshd_5_8} shows
+        the E-SHD result for different experiments (x-axis) and the y-axis represents the E-SHD value. Fig.~\ref{
+            fig:auroc_5_8, fig:auprc_5_8} shows the AUROC and AUPRC results for different experiments (x-axis) and the
+        y-axis represents the AUROC and AUPRC values respectively.}
+        \label{fig:metrics_dataset_1}
+    \end{figure}
 
 
+    \section{Conclusion}\label{sec:conclusion}
+    \vspace*{-3mm}
 
 
+    \section{Future Work}\label{sec:future_work}
+    \vspace*{-3mm}
 
+    This project was a great opportunity to understand the recent advancements in the field of Bayesian Structure
+    Learning. We have implemented the proposed approach in~\cite{deleu2022daggflownet} and conducted experiments to
+    evaluate the performance of the proposed approach. We have used synthetic datasets to evaluate the performance of
+    the proposed approach on graphs with different complexities and sizes. Numerous evaluation metrics were used to
+    evaluate the performance of this approach. However, due to the scale of this project, we could not further
+    explore the following directions and these could be suggestions for future work:
 
+    \begin{itemize}
+        \item \textbf{Real-world Datasets:} In this project, we used synthetic datasets to evaluate the performance of
+        the proposed approach. However, it would be interesting to evaluate the performance of the proposed approach
+        on real-world datasets. This could give us a better understanding of the robustness of the proposed approach
+        in real-world scenarios.
+        \item \textbf{Comparison with other Approaches:} In this project, we have implemented the proposed approach
+        in~\cite{deleu2022daggflownet} and conducted experiments to evaluate the performance of the proposed approach.
+        However, it would be interesting to compare the performance of the proposed approach with other approaches in
+        the field of Bayesian Structure Learning.
+        \item \textbf{Hyperparameter Tuning:} In this project, we have used a set of hyperparameters for the
+        experiments. However, it would be interesting to conduct experiments with different hyperparameters to
+        evaluate the performance of the proposed approach with different hyperparameters.
+        \item And lastly, to our regret, we planned performing experiments on larger graphs included in
+        Table~\ref{tab:future_dataset}, however because of the limited time and resources we had in hand,
+        further exploration of these datasets was not possible.
+    \end{itemize}
 
-
-
-
+    \begin{table}[h]
+        \centering
+        \begin{tabular}{|l|c|c|c|}
+            \hline
+            \textbf{Dataset} & \textbf{Nodes} & \textbf{Average # Edges} & \textbf{Data Size} \\
+            \hline
+            Dataset 3.1      & 15             & 45                       & 150                \\
+            Dataset 3.2      & ---            & ---                      & 250                \\
+            Dataset 3.3      & ---            & ---                      & 500                \\
+            \hline
+        \end{tabular}
+        \caption{Datasets that could be used for future work.}
+        \label{tab:future_dataset}
+    \end{table}
 
 
     \pagebreak
@@ -552,7 +817,7 @@
         P_F(s_f \mid s_t) \coloneq \frac{F(s_t \to s_f)}{\sum_{s \in \text{Ch}(s_t)} F(s_t \to s)} = \frac{R(s_t)}{F(s_t)}
         \LeftRightArrow F(s_t) = \frac{R(s_t)}{P_F(s_f \mid s_t)},
     \]
-    where $F(s \to s')$ represents the flow from state $s$ to  $s'$. Replacing $F(.)$ in eq.~\eqref{eq:detailed_balance_app}
+    where $F(s \to s')$ represents the flow from state $s$ to  $s'$. Replacing $F(.)$ in Eq.~\eqref{eq:detailed_balance_app}
     yields:
     \begin{equation}
         R(s_t)P_F(s_{t+1} \mid s_t)P_F(s_f \mid s_{t+1}) = R(s_{t+1})P_B(s_t \mid s_{t+1})P_F(s_f \mid s_t).
@@ -594,10 +859,10 @@
     calculated as $T_t + \hat{T}_{t+1}$.
 
     The intuition behind this is: $C_j$ is the nodes that have a directed path to $j$ and $R_i$ is the nodes that
-    $i$ has a directed path to. The outer product operation will result in a matrix where the element $[a, b]$ is
+    $i$ have a directed path to. The outer product operation will result in a matrix where the element $[a, b]$ is
     non-zero if there is a directed path from $b$ to $a$ in the original matrix and thus, we cannot add an edge from
-    $a$ to $b$. Fig.~\ref{fig:masking} shows the masking operation for a simple graph and you can follow these
-    explanation on this figure to better understand the operation.
+    $a$ to $b$. Fig.~\ref{fig:masking} shows the masking operation for a simple graph, and you can follow these
+    explanations on this figure to better understand the operation.
 
     \begin{figure}[h]
         \centering
@@ -635,16 +900,113 @@
     The data Generation Process is mostly based on the original paper which itself is based on the work of~\cite{erdos1960evolutionrandomgraphs}.
     The process is as follows:
 
-    ### Write the code in algorithm from graph.py
-
     \begin{enumerate}
         \item Sample a DAG based on prior probability $P(G)$ that is based on the model present by~\cite{erdos1960evolutionrandomgraphs}.
-        This model, as explained in section~\ref{sec:proposed_approach}, is a modular prior function which considers
-        the probability of existence of an edge between two nodes independently. The prior is defined as:
-        \
+        This model is a modular prior function that considers the probability of existence of an edge between two
+        nodes independently. Generation of such graph is based on a bionomial distribution with expected value of $2e$
+        where $e$ is the number of edges. In the data generation process, we make sure that the graph is acyclic and
+        the expected number of edges in the final graph is $e$.
+
+        Firstly, we sample a $d \times d$ matrix $A$ where each element $A_{ij}$ is sampled from a Binomial
+        distribution with
+        \begin{equation}
+            p = \frac{2e}{d(d-1)}.
+            \label{eq:binomial}
+        \end{equation}
+        Then, elements on and above diagonal are thrown away to make sure the adjacency matrix is lower-triangular.
+        This lower-triangular matrix is acyclic. Then, for relabeling purposes, rows and columns are permuted with
+        the same random permutation --- this is a common convention for relabeling a graph and does not change the
+        structure of the graph.
+        The expected number of edges in the final graph is $e$ because the expected number of edges in the sampled
+        matrix $A$ is $2e$ and we throw away half of the elements.
+
+        \item After acquireing a dag, we sample its parameters
+        based on a normal distribution with mean 0 and standard deviation 1. We also account for a noise term that
+        is considered to be zero in the experiments, thus, the equation of the graph would be:
+        \begin{equation}
+            X_j = \sum_{i \in \text{Pa}_G(X_j)} \theta_{ij}X_i + \epsilon_j,
+            \label{eq:graph}
+        \end{equation}
+        where $\theta_{ij} \sim \mathcal{N}(0, 1)$ and $\epsilon_j \sim \mathcal{N}(0, 0.01)$. Note that $X_j$ is the
+        mean of the normal distribution that the data for node $j$ is sampled from. The variance of this normal
+        distribution is considered to be 0.1 for all nodes.
+
+        \item Now that we have the graph and its parameters, we sample $\mathcal{D}$ using ancestral sampling.
+    \end{enumerate}
+
+
+    \section{Training Loop}\label{app:training_loop}
+    \vspace*{-3mm}
+
+    In this section, we will explain the training loop used in the experiments. The training loop is based on the
+    training loop in the original paper. The training loop is depicted in Alg.~\ref{alg:training_loop}.
+    We start by initializing the environment, replay buffer, and model parameters.
+    During each iteration, actions are sampled based on the current policy and an exploration parameter ($\epsilon$
+    ), these actions are then executed in the environment, and the resulting transitions are stored in the replay
+    buffer. After a prefill
+    phase, batches of transitions are sampled from the buffer to update the model's parameters. The exploration
+    parameter is adjusted dynamically. Once training is complete, the posterior distribution of graphs is estimated,
+    this estimation is done using sampling from the learned distribution. Finally, evaluation results, and
+    vbvariables are saved to disk.
+
+
+    \begin{algorithm}[H]
+        \caption{Training Loop for DAG-GFlowNet}
+        \begin{algorithmic}[1]
+            \Require Environment and GFlowNet initialized with parameters
+            \Require Replay buffer initialized with capacity
+            \Require Exploration schedule $\epsilon$ defined
+            \State Initialize random seed and keys
+            \State Reset environment to obtain initial observations
+
+            \For{iteration $= 1$ to \texttt{prefill} + \texttt{num\_iterations}}
+                \State \textbf{Sample actions:} Compute actions using policy with exploration parameter $\epsilon$
+                \State \textbf{Execute actions:} Perform actions in the environment to obtain:
+                \begin{itemize}
+                    \item Next observations
+                    \item Delta scores
+                    \item Termination flags (\texttt{dones})
+                \end{itemize}
+                \State \textbf{Update Replay Buffer:} Store transitions (observations, actions, next observations, rewards, and dones) in the buffer
+                \State Update observations with next observations
+
+                \If{iteration $\geq$ \texttt{prefill}}
+                    \State \textbf{Sample Batch:} Randomly sample a batch from the replay buffer
+                    \State \textbf{Update Parameters:} Perform one optimization step using sampled batch
+                \EndIf
+
+                \State Update $\epsilon$ using exploration schedule
+                \State Log progress (loss, exploration rate, etc.)
+            \EndFor
+
+            \State \textbf{Posterior Estimate:} Compute posterior distribution of graphs using the trained GFlowNet
+            \State \textbf{Compute Metrics:} Evaluate the expected SHD, expected edges, and other threshold-based metrics
+            \State \textbf{Save Results:} Store the model, replay buffer, posterior samples, and evaluation metrics to disk
+        \end{algorithmic}\label{alg:training_loop}
+    \end{algorithm}
+
+    \subsection{Reinforcement Learning Concepts}\label{app:rl_concepts}
+    \vspace*{-3mm}
+
+
+    In reinforcement learning (RL), the \textbf{environment} represents the external system or task that the agent
+    interacts with to learn a policy. The environment provides the agent with:
+    \begin{itemize}
+        \item \textbf{State:} A representation of the current status or configuration of the system.
+        \item \textbf{Action space:} The set of possible actions the agent can take to influence the environment.
+        \item \textbf{Transition dynamics:} Rules governing how the environment evolves in response to the agent's actions.
+        \item \textbf{Reward signal:} Feedback used by the agent to evaluate the effectiveness of its actions and guide future decisions.
+    \end{itemize}
+
+
+    In this work, the environment is designed to model the structure learning problem as a graph generation task. It
+    provides observations representing partial or complete graph structures, accepts actions that modify the graph (
+    e.g., adding or removing edges), and computes rewards based on changes in the graph's score. This setup enables the
+    GFlowNet agent to explore and learn graph structures that maximize the overall objective, aligning RL principles
+    with the requirements of structure learning.
 
 
 %\begin{thebibliography}{99}
 %\end{thebibliography}
 
-    \end{document}
+\end{document}
